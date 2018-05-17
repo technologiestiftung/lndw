@@ -51,7 +51,7 @@ function SaveSnap(){
     formdata.append("base64image", file);
     var ajax = new XMLHttpRequest();
     ajax.addEventListener("load", function(event) { uploadcomplete(event);}, false);
-    ajax.open("POST", "http://localhost:5971/analyse");
+    ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
     ajax.send(formdata);
 }
 
@@ -59,8 +59,6 @@ function uploadcomplete(event){
     document.getElementById("loading").innerHTML=event.target.responseText;
 
     let data = JSON.parse(event.target.responseText)
-
-    console.log(data[0])
 
     let b = d3.select('#results')
 
