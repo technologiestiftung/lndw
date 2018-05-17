@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+  html,body{
+    margin:0;
+    padding:0;
+    border:0;
+  }
+
+  #results{
+    position: relative;
+  }
+
+  #results *{
+    position:absolute;
+  }
+</style>
+<div class="container" id="Cam"><b>Webcam Preview...</b>
+    <div id="my_camera"></div><form><input type="button" value="Snap It" onClick="take_snapshot()"></form>
+</div>
+<div class="container" id="Prev">
+    <b>Snap Preview...</b><div id="results"></div>
+</div>
+<div class="container" id="Saved">
+    <b>Saved</b><span id="loading" style="top:720px; position:relative;"></span><img id="uploaded" src=""/>
+</div>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript" src="webcamjs-1.0.25/webcam.min.js"></script>
+<script language="JavaScript">
+function take_snapshot() {
+  Webcam.snap(function(data_uri) {
+    document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/><button onclick="SaveSnap();">Save Snap</button>';
+  });
+}
+
+function ShowCam(){
+  Webcam.set({
+    width: 1280,
+    height: 720,
+    flip_horiz:true,
+    image_format: 'png'
+  });
+  Webcam.attach('#my_camera');
+}
+
+function SaveSnap(){
+    document.getElementById("loading").innerHTML="Saving, please wait...";
+    var file =  document.getElementById("base64image").src;
+    var formdata = new FormData();
+    formdata.append("base64image", file);
+    var ajax = new XMLHttpRequest();
+    ajax.addEventListener("load", function(event) { uploadcomplete(event);}, false);
+    ajax.open("POST", "http://localhost:5971/analyse");
+    ajax.send(formdata);
+}
+
+function uploadcomplete(event){
+    document.getElementById("loading").innerHTML=event.target.responseText;
+
+    let data = JSON.parse(event.target.responseText)
+
+    console.log(data[0])
+
+    let b = d3.select('#results')
+
+    b.append('div')
+      .style('border', '1px solid red')
+      .style('width',data[0].faceRectangle.width+'px')
+      .style('height',data[0].faceRectangle.height+'px')
+      .style('top',data[0].faceRectangle.top+'px')
+      .style('left',data[0].faceRectangle.left+'px')
+      
+    for(let key in data[0].faceLandmarks){
+      let l = data[0].faceLandmarks[key]
+      b.append('div')
+        .style('width',5+'px')
+        .style('height',5+'px')
+        .style('background','blue')
+        .style('top',l.y+'px')
+        .style('left',l.x+'px')  
+    }
+
+}
+
+window.onload= ShowCam;
+
+</script>
+</body>
+</html>
