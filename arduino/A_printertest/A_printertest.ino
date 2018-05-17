@@ -15,6 +15,8 @@
 #include "adalogo.h"
 #include "adaqrcode.h"
 #include "tsb.h"
+#include "profile.h"
+// #include "attributes.h"
 
 // Here's the new syntax when using SoftwareSerial (e.g. Arduino Uno) ----
 // If using hardware serial instead, comment out or remove these lines:
@@ -56,19 +58,21 @@ void setup() {
   printer.println(F("FACIAL RECOGNITION"));
   printer.inverseOff();
 
-  // printer.boldOn();
-  // printer.boldOff();
+  printer.printBitmap(profile_width, profile_height, profile_data);
 
-  printer.setSize('M');        // Set type size, accepts 'S', 'M', 'L'
-  printer.println(F("Emotion: neutral"));
+  printer.setSize('S');
+  printer.println(F("EMOTION:"));
+  printer.setSize('M');
+  printer.println(F("neutral"));
+  printer.setSize('S');
+  printer.println(F("HAARFARBE:"));
+  printer.setSize('M');
+  printer.println(F("braun"));
+  printer.setSize('S');
+  printer.println(F("ACCESSOIRE:"));
+  printer.setSize('M');
+  printer.println(F("keine"));
 
-  // Print the 75x75 pixel logo in adalogo.h:
-  printer.printBitmap(tsb_width, tsb_height, tsb_data);
-
-  // Print the 135x135 pixel QR code in adaqrcode.h:
-  // printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
-  // printer.println(F("Adafruit!"));
-  printer.feed(2);
 
   printer.sleep();      // Tell printer to sleep
   delay(3000L);         // Sleep for 3 seconds

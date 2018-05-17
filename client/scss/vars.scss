@@ -1,3 +1,17 @@
-$color-bg: #002448;
-$color-primary: #50E3C1;
+@font-face {
+    font-family: "Maison Mono Regular";
+    src: url('assets/fonts/Maison Mono Regular.otf') format("opentype");
+}
+
+@font-face {
+    font-family: "Maison Mono Bold";
+    src: url('assets/fonts/Maison Mono Bold.otf') format("opentype");
+}
+
+$color-bg: #003163;
+$color-bg-highlighted: #0B4F76;
+$color-primary: #DFF8FF;
 $color-primary-unselected: #96CBDB;
+$color-primary-selec: #DFF8FF;
+
+$color-select: #50E3C1;

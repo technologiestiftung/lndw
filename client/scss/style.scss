@@ -1,7 +1,77 @@
 body {
-    background: $color-bg;
+    background: url(assets/pattern.jpg) top left repeat;
+    font-family: "Maison Mono Regular";
+    color: $color-primary;
+}
+
+h1 {
+    font-size: 5rem;
+}
+
+h3 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.wrapper-title {
+    margin: 200px 0px 100px 180px;
+    background: $color-bg-highlighted;
+    width: 65vw;
+}
+
+.line {
+    width: 60px;
+}
+
+.bar {
+    position: relative;
+    top: 590px;
+    left: 22px;
+}
+
+.side-block {
+    background: $color-bg-highlighted;
+    display: inline-block;
+    position: absolute;
+    font-size: .8rem;
+    padding: 0px 10px 0px 10px;
+    letter-spacing: 2px;
+
+    &.lat {
+        transform: rotate(90deg) translateY(-890px) translateX(200px);
+    }
+
+    &.lng {
+        transform: rotate(90deg) translateY(-890px) translateX(450px);
+    }
+
+    &.date {
+        transform: rotate(-90deg) translateY(-30px) translateX(-400px);
+    }
+
+    &.tag {
+        transform: rotate(-90deg) translateY(-16px) translateX(-200px);
+    }
 }
 
 #video {
-    border: 1px solid white;
+    position: absolute;
+    transform: rotate(90deg) translateY(-109px) translateX(-107px);
+}
+
+.hide {
+    display: none;
+}
+
+.btn-next {
+    background: $color-select;
+    font-family: "Maison Mono Regular";
+    position: relative;
+    left: 180px;
+    font-size: 1rem;
+    padding: 10px 15px 8px 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
 }
