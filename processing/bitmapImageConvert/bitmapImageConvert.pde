@@ -32,6 +32,8 @@ void processImage(File image) {
   img.filter(THRESHOLD);
   img.loadPixels();
 
+  //println((img.pixels[0] & 1));
+
   // Open header file for output (NOTE: WILL CLOBBER EXISTING .H FILE, if any)
   output = createWriter(filename); 
 
@@ -56,11 +58,12 @@ void processImage(File image) {
           output.print("\n ");
           bytesOnLine = 0;
       }
+      println(sum);
       output.format(" 0x%02X", sum); // Write accumulated bits
       if(++byteNum < totalBytes) output.print(',');
     }
   }
-
+  
   // End array, close file, exit program
   output.println();
   output.println("};");
