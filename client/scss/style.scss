@@ -57,7 +57,7 @@ h3 {
 
 #video {
     position: absolute;
-    transform: rotate(90deg) translateY(-109px) translateX(-107px);
+    transform: rotate(90deg) translateY(-109px) translateX(-107px) scale(1, -1);
 }
 
 .hide {
@@ -75,3 +75,17 @@ h3 {
     text-transform: uppercase;
     border: none;
 }
+
+.btn-cancel {
+    background: none;
+    color: $color-primary-selec;
+    font-family: "Maison Mono Regular";
+    position: relative;
+    left: 180px;
+    font-size: 1rem;
+    padding: 10px 15px 8px 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+}
+
