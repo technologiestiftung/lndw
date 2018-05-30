@@ -6,7 +6,8 @@ const	sqlite = require('better-sqlite3'),
   		formidable = require('formidable'),
   		FaceAPIClient = require('azure-cognitiveservices-face'),
   		CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials,
-  		config = require(__dirname + '/config.json')
+  		config = require(__dirname + '/config.json'),
+		{ execSync } = require('child_process')
 
 let credentials = new CognitiveServicesCredentials(config.azure.key1),
 	client = new FaceAPIClient(credentials, config.azure.region);
@@ -45,6 +46,11 @@ app.get("/hello", (req, res)=>{
 app.get("/data", (req, res)=>{
 	let rows = db.prepare('SELECT * FROM face_metrics').all([])
 	res.status(500).json(rows)
+})
+
+app.get("/print", (req, res)=>{
+	let stdout = execSync(' arduino --upload /Users/sebastianmeier/Sites/TSB/lndw-2018/snap-server/arduino/src/sketch/sketch.ino --port /dev/cu.usbmodem141441 --board arduino:avr:mega');
+	res.status(500).json({"status":"printing"})
 })
 
 app.post("/analyse", (req, res)=>{
