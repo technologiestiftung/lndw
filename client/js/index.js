@@ -1,7 +1,7 @@
 var vidWidth = 731;
 var vidHeight = 550;
 var title, info, prompt, video, container, devices, id, config, canvas;
-var blockDate, btnNext, countdown = 6;
+var blockDate, btnNext, countdown = 6, valueEmotion = 0, emotionString = '', hairString = '', valueHair = 0;
 
 config = {
     state: 0,
@@ -72,13 +72,36 @@ function saveSnapshot(img){
 function uploadcomplete(event){
     let data = JSON.parse(event.target.responseText)
     let gender = document.querySelector('#p-gender');
-    // let gender = document.querySelector('#p-emotion');
+    let age = document.querySelector('#p-age');
+    let emotion = document.querySelector('#p-emotion');
+    let hair = document.querySelector('#p-hair');
 
     console.log(data);
 
+    
     gender.innerHTML = (data[0].faceAttributes.gender == 'male') ? 'männlich': 'weiblich';
+    age.innerHTML = data[0].faceAttributes.age + ' Jahre';
+    
+    for (var property in data[0].faceAttributes.emotion) {
+        if (data[0].faceAttributes.emotion.hasOwnProperty(property)) {
+            valueEmotion = (data[0].faceAttributes.emotion[property] > valueEmotion) ? data[0].faceAttributes.emotion[property] : valueEmotion;
+            if (valueEmotion === data[0].faceAttributes.emotion[property]) { emotionString = property }
+        }
+    }
+    
+    for (var property in data[0].faceAttributes.hair.hairColor) {
+        if (data[0].faceAttributes.hair.hairColor.hasOwnProperty(property)) {
+            console.log(property);
+            valueHair = (data[0].faceAttributes.hair.hairColor[property] > valueHair) ? data[0].faceAttributes.hair.hairColor[property] : valueHair;
+            if (valueHair === data[0].faceAttributes.hair.hairColor[property]) { hairString = property }
+        }
+    }
 
-    console.log(data[0].faceAttributes.gender);
+    hair.innerHTML = hairString + '(' + valueHair + ')';
+    emotion.innerHTML = emotionString + '(' + valueEmotion + ')';
+
+    console.log(data);
+
 }
 
 function getDate() {
@@ -121,7 +144,7 @@ btnNext.addEventListener('click', () => {
     document.querySelector('#cancel').classList.remove('hide');
     config.state += 1;
 
-    if (config.state == 1) { 
+    if (config.state == 1) {
         btnNext.innerHTML = 'Zustimmen';  
         document.getElementById('frame-wrapper').classList.add('hide');
     } else if (config.state == 2) { 
