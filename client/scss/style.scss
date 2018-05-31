@@ -33,7 +33,7 @@ h3 {
 }
 
 .icon {
-    height: 35px;
+    height: 32px;
     margin-left: 20px;
 }
 
@@ -43,6 +43,11 @@ h3 {
     top: 50px;
     text-transform: uppercase;
     letter-spacing: .5px;
+}
+
+.btn-group {
+    position: absolute;
+    bottom: 50px;
 }
 
 .line {
@@ -64,14 +69,33 @@ h3 {
     transform: translateX(230px) translateY(100px);
 }
 
+.wrapper-analysis {
+    position: absolute;
+    border: 1px solid red;
+    width: 650px;
+    left: 175px;
+    top: 900px;
+}
+
+.countdown-wrapper {
+    position: absolute;
+    left: 320px;
+    top: 390px;
+    color: $color-bg-highlighted;
+}
+
+.countdown-number {
+    font-size: 10rem;
+}
+
 .frame-wrapper {
     position: absolute;
     top: 118px;
     left: 254px;
     width: 500px;
     height: 700px;
+    // overflow: visible;
     opacity: 1;
-    border: 1px solid red;
 
     img {
         position: absolute;
@@ -80,7 +104,14 @@ h3 {
     }
 
     span {
+        color: $color-bg-highlighted;
+        position: absolute;
+        width: 200px;
+        opacity: 0.9;
+        left: 300px;
+        top: 450px;
         background: $color-primary-unselected;
+        
     }
 }
 
@@ -196,4 +227,31 @@ h3 {
     overflow:hidden;
     clip:rect(0,900px,0,0); 
     animation:noise-anim-2 3s infinite linear alternate-reverse;
+  }
+
+  @keyframes flickerAnimation {
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-o-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-moz-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-webkit-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  .animate-flicker {
+    -webkit-animation: flickerAnimation 1s infinite;
+    -moz-animation: flickerAnimation 1s infinite;
+    -o-animation: flickerAnimation 1s infinite;
+    animation: flickerAnimation 1s infinite;
   }

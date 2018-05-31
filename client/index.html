@@ -7,10 +7,16 @@
         <video id="video" class="hide"></video>
         <canvas id="canvas" class="canvas-wrapper"></canvas>
 
-        <div class="frame-wrapper">
+        <div id="canvas" class="countdown-wrapper hide">
+            <span>Foto in</span>
+            <span class="countdown-number" id="countdown-num"></span>
+            <span>Sekunden</span>
+        </div>
+
+        <div id="frame-wrapper" class="frame-wrapper hide">
                 <img src="assets/frame.svg" alt="">
 
-                <span>
+                <span class="animate-flicker">
                     Platzieren Sie ihr Gesicht 
                     <br>
                     in die Mitte des Rahmens.
@@ -45,7 +51,7 @@
         </div>
 
         <div id="state-01" class="hide">
-            <span class="title-state">Test Text</span>
+            <span class="title-state">02 Aufklärung</span>
             <div class="wrapper-title">
                 <span class="headline">Datenschutz</span>
                 <br><br>
@@ -60,16 +66,18 @@
         </div>
 
         <div id="state-02" class="hide">
-            <span class="title-state">Test Text</span>
-            <div class="wrapper-title">
-                <span>State 02</span>
-            </div>
+            <span class="title-state">03 SCAN FOTO</span>
         </div>
 
         <div id="state-03" class="hide">
-            <span class="title-state">Test Text</span>
-            <div class="wrapper-title">
-                <span>State 03</span>
+            <span class="title-state">04 Analyse Foto</span>
+            <div class="wrapper-analysis">
+                <span>Auswertung</span>
+                <div class="param-wrapper">
+                    <span>Geschlecht</span>
+                    <span id="p-gender"></span>
+                </div>
+            </div>
             </div>
         </div>
 

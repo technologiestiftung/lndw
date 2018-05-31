@@ -1,7 +1,7 @@
 var vidWidth = 731;
 var vidHeight = 550;
 var title, info, prompt, video, container, devices, id, config, canvas;
-var blockDate, btnNext;
+var blockDate, btnNext, countdown = 6;
 
 config = {
     state: 0,
@@ -21,7 +21,21 @@ function takeSnapshot() {
 }
 
 function setTimer() {
-    
+    setTimeout(() => {
+        countdown--;
+        let numTag = document.getElementById('countdown-num');
+        numTag.innerHTML = '0' + countdown;
+
+        if (countdown > 0) {
+            setTimer();
+        }
+        else if (countdown === 0) {
+            takeSnapshot();
+            document.querySelector('.canvas-wrapper').classList.remove('hide');
+            document.querySelector('.countdown-wrapper').classList.add('hide');
+            countdown = 6;
+        }
+    },1000);
 }
 
 function streamCamera() {
@@ -31,7 +45,7 @@ function streamCamera() {
     video.autoplay = true;
 
     navigator.mediaDevices.enumerateDevices().then(devices => {
-        console.log(devices);
+        // console.log(devices);
         var camera = devices.filter(device => device.kind == "videoinput");
         camera.forEach(device => {
             if(device.deviceId == "c57886efe5999c5b2bee5c251718807e5d912fd84b91ba53afef097418dd4603") { id = device.deviceId;};
@@ -41,12 +55,10 @@ function streamCamera() {
     })
     .then(stream => {
         video.srcObject = stream
-        video.addEventListener('click', takeSnapshot);
     });
 }
 
 function saveSnapshot(img){
-    console.log(img);
     var formdata = new FormData();
     formdata.append("base64image", img);
     var ajax = new XMLHttpRequest();
@@ -59,7 +71,14 @@ function saveSnapshot(img){
 
 function uploadcomplete(event){
     let data = JSON.parse(event.target.responseText)
+    let gender = document.querySelector('#p-gender');
+    // let gender = document.querySelector('#p-emotion');
+
     console.log(data);
+
+    gender.innerHTML = (data[0].faceAttributes.gender == 'male') ? 'männlich': 'weiblich';
+
+    console.log(data[0].faceAttributes.gender);
 }
 
 function getDate() {
@@ -93,6 +112,9 @@ btnCancel.addEventListener('click', () => {
     document.querySelector('#state-00').classList.remove('hide');
     document.querySelector('#cancel').classList.add('hide');
     document.querySelector('#next').classList.remove('hide');
+    document.getElementById('frame-wrapper').classList.add('hide');
+    document.querySelector('.canvas-wrapper').classList.add('hide');
+    document.querySelector('.countdown-wrapper').classList.add('hide');
 });
 
 btnNext.addEventListener('click', () => {
@@ -101,15 +123,21 @@ btnNext.addEventListener('click', () => {
 
     if (config.state == 1) { 
         btnNext.innerHTML = 'Zustimmen';  
+        document.getElementById('frame-wrapper').classList.add('hide');
     } else if (config.state == 2) { 
         video.classList.remove('hide');
         btnNext.innerHTML = 'Fotografieren';  
         btnCancel.innerHTML = 'Abbrechen';
-        setTimer();
+        document.getElementById('frame-wrapper').classList.remove('hide');
     } else if (config.state == 3) {
+        setTimer();
         btnNext.innerHTML = 'Weiter';  
-        video.classList.add('hide');
+        document.querySelector('.countdown-wrapper').classList.remove('hide');
+        document.querySelector('.canvas-wrapper').classList.remove('hide');
+        document.getElementById('frame-wrapper').classList.add('hide');
     } else if (config.state == 4) {
+        document.querySelector('.countdown-wrapper').classList.add('hide');
+        video.classList.add('hide');
         btnNext.innerHTML = 'Weiter';
     } else if (config.state == 5) {
         btnCancel.innerHTML = 'Neu starten';
