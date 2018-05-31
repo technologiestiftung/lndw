@@ -32,7 +32,7 @@
   
 function take_snapshot() {
   Webcam.snap(function(data_uri) {
-    document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/><button onclick="SaveSnap();">Save Snap</button>';
+    document.getElementById('results').innerHTML = '<img style="transform:rotate(90deg)" id="base64image" src="'+data_uri+'"/><button onclick="SaveSnap();">Save Snap</button>';
   });
 }
 
@@ -50,10 +50,11 @@ function SaveSnap(){
     document.getElementById("loading").innerHTML="Saving, please wait...";
     var file =  document.getElementById("base64image").src;
     var formdata = new FormData();
+    formdata.append("rotate", 90);
     formdata.append("base64image", file);
     var ajax = new XMLHttpRequest();
     ajax.addEventListener("load", function(event) { uploadcomplete(event);}, false);
-    ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
+    ajax.open("POST", "http://localhost:5971/analyse");
     ajax.send(formdata);
 }
 
