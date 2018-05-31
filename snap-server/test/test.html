@@ -28,6 +28,8 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script type="text/javascript" src="webcamjs-1.0.25/webcam.min.js"></script>
 <script language="JavaScript">
+
+  
 function take_snapshot() {
   Webcam.snap(function(data_uri) {
     document.getElementById('results').innerHTML = '<img id="base64image" src="'+data_uri+'"/><button onclick="SaveSnap();">Save Snap</button>';

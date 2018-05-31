@@ -34,7 +34,7 @@ const app = express()
 app.all('/*', (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-  res.header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With")
+  res.header("Access-Control-Allow-Headers", "*")
   next()
 })
 
@@ -48,6 +48,7 @@ app.get("/data", (req, res)=>{
 })
 
 app.post("/analyse", (req, res)=>{
+	res.header("Access-Control-Allow-Origin", "*")
 	let form = new formidable.IncomingForm()
     form.multiples = true
     form.keepExtensions = true

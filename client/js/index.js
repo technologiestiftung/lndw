@@ -1,11 +1,28 @@
-var vidWidth = 800;
-var vidHeight = 1200;
-var title, info, prompt, video, container, devices, id, config;
+var vidWidth = 731;
+var vidHeight = 550;
+var title, info, prompt, video, container, devices, id, config, canvas;
 var blockDate, btnNext;
 
 config = {
     state: 0,
 };
+
+function takeSnapshot() {
+    let src = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    canvas.width = vidHeight;
+    canvas.height = vidWidth;
+    context.rotate(90 * Math.PI / 180);
+    context.scale(1,-1);
+    context.drawImage(video, 0, 0, vidWidth, vidHeight);
+    let data = canvas.toDataURL();
+    saveSnapshot(data);
+}
+
+function setTimer() {
+    
+}
 
 function streamCamera() {
     video = document.querySelector('#video');
@@ -24,7 +41,25 @@ function streamCamera() {
     })
     .then(stream => {
         video.srcObject = stream
+        video.addEventListener('click', takeSnapshot);
     });
+}
+
+function saveSnapshot(img){
+    console.log(img);
+    var formdata = new FormData();
+    formdata.append("base64image", img);
+    var ajax = new XMLHttpRequest();
+    ajax.addEventListener("load", function(event) { 
+        uploadcomplete(event);
+    }, false);
+    ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
+    ajax.send(formdata);
+}
+
+function uploadcomplete(event){
+    let data = JSON.parse(event.target.responseText)
+    console.log(data);
 }
 
 function getDate() {
@@ -42,11 +77,13 @@ function getDate() {
 
 btnNext = document.querySelector('#next');
 btnCancel = document.querySelector('#cancel');
+video = document.querySelector('#video');
 
 btnCancel.addEventListener('click', () => {
     let currentState = config.state;
     config.state = 0; 
     btnNext.innerHTML = 'Starten'; 
+    video.classList.add('hide');
 
     for (let index = 0; index < 6; index++) {
         const id = '#state-0' + index;
@@ -62,12 +99,16 @@ btnNext.addEventListener('click', () => {
     document.querySelector('#cancel').classList.remove('hide');
     config.state += 1;
 
-    if (config.state == 1) { btnNext.innerHTML = 'Zustimmen';  }
-    else if (config.state == 2) { 
+    if (config.state == 1) { 
+        btnNext.innerHTML = 'Zustimmen';  
+    } else if (config.state == 2) { 
+        video.classList.remove('hide');
         btnNext.innerHTML = 'Fotografieren';  
-        btnCancel.innerHTML = 'Abbrechen';  
+        btnCancel.innerHTML = 'Abbrechen';
+        setTimer();
     } else if (config.state == 3) {
-        btnNext.innerHTML == 'Weiter';  
+        btnNext.innerHTML = 'Weiter';  
+        video.classList.add('hide');
     } else if (config.state == 4) {
         btnNext.innerHTML = 'Weiter';
     } else if (config.state == 5) {
@@ -91,6 +132,14 @@ btnNext.addEventListener('click', () => {
             }
         }
     }
+})
+
+window.addEventListener('click', () => {
+    console.log('click');
+})
+
+window.addEventListener('scroll', () => {
+    console.log('scroll');
 })
 
 blockDate = document.querySelector('#block-date');

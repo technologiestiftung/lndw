@@ -18,6 +18,31 @@ h3 {
     margin: 200px 0px 100px 180px;
     background: $color-bg-highlighted;
     width: 65vw;
+
+    p {
+        text-transform: uppercase;
+        line-height: 150%;
+        letter-spacing: .5px;
+    }
+}
+
+.icon-wrapper {
+    position: absolute;
+    top: 40px;
+    right: 70px;
+}
+
+.icon {
+    height: 35px;
+    margin-left: 20px;
+}
+
+.title-state {
+    position: absolute;
+    left: 185px;
+    top: 50px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
 }
 
 .line {
@@ -28,6 +53,35 @@ h3 {
     position: relative;
     top: 590px;
     left: 22px;
+}
+
+.headline {
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+.canvas-wrapper {
+    transform: translateX(230px) translateY(100px);
+}
+
+.frame-wrapper {
+    position: absolute;
+    top: 118px;
+    left: 254px;
+    width: 500px;
+    height: 700px;
+    opacity: 1;
+    border: 1px solid red;
+
+    img {
+        position: absolute;
+        left: 70px;
+        top: 90px;
+    }
+
+    span {
+        background: $color-primary-unselected;
+    }
 }
 
 .side-block {
@@ -57,7 +111,13 @@ h3 {
 
 #video {
     position: absolute;
-    transform: rotate(90deg) translateY(-109px) translateX(-107px) scale(1, -1);
+    top: 220px;
+    opacity: 1;
+    transform: rotate(90deg) translateY(-138px) translateX(-29px) scale(1, -1);
+}
+
+#canvas {
+    position: absolute;
 }
 
 .hide {
@@ -89,3 +149,51 @@ h3 {
     border: none;
 }
 
+.glitch{
+    color:white;
+    // font-size:100px;
+    position:relative;
+    // width:400px;
+    margin:0 auto;
+  }
+  @keyframes noise-anim{
+    $steps:10;
+    @for $i from 0 through $steps{
+      #{percentage($i*(1/$steps))}{
+        clip:rect(random(100)+px,9999px,random(100)+px,0);
+      }
+    }
+  }
+  .glitch:after{
+    content:attr(data-text);
+    position:absolute;
+    left:2px;
+    text-shadow:-1px 0 red;
+    top:0;
+    color:white;
+    background:$color-bg-highlighted;
+    overflow:hidden;
+    clip:rect(0,900px,0,0); 
+    animation:noise-anim 2s infinite linear alternate-reverse;
+  }
+  
+  @keyframes noise-anim-2{
+    $steps:20;
+    @for $i from 0 through $steps{
+      #{percentage($i*(1/$steps))}{
+        clip:rect(random(100)+px,9999px,random(100)+px,0);
+      }
+    }
+  }
+  .glitch:before{
+    content:attr(data-text);
+    position:absolute;
+    left:-2px;
+    text-shadow:1px 0 blue; 
+    top:0;
+    color:white;
+    background:$color-bg-highlighted;
+    overflow:hidden;
+    clip:rect(0,900px,0,0); 
+    animation:noise-anim-2 3s infinite linear alternate-reverse;
+  }

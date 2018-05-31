@@ -3,7 +3,19 @@
     <head></head>
     <body>
         <link rel="stylesheet" href="root.css">
+
         <video id="video" class="hide"></video>
+        <canvas id="canvas" class="canvas-wrapper"></canvas>
+
+        <div class="frame-wrapper">
+                <img src="assets/frame.svg" alt="">
+
+                <span>
+                    Platzieren Sie ihr Gesicht 
+                    <br>
+                    in die Mitte des Rahmens.
+                </span>
+            </div>
         
         <div class="side-block date" id="block-date"></div>
         <div class="side-block tag" id="block-date">#lndw18</div>
@@ -11,53 +23,74 @@
         <div class="side-block lng" id="block-date">13° 24' 17.8344'' E	</div>
         <img class="bar" src="assets/bar.png" alt="">
 
+        <div class="icon-wrapper">
+            <img class="icon" src="assets/icons/01.png" alt="">
+            <img class="icon" src="assets/icons/02.png" alt="">
+            <img class="icon" src="assets/icons/03.png" alt="">
+        </div>
+
         <div id="state-00">
+            <span class="title-state">01 facial recognition</span>
             <div class="wrapper-title">
-                <h1>
-                    M1T DEN <br>
-                    AUGEN <br>
-                    D3R MASCH1NE
-                </h1>
+                <h1 class="glitch" data-text="M1T DEN">M1T DEN </h1>
+                <h1 class="glitch" data-text="AUGEN">AUGEN </h1>
+                <h1 class="glitch" data-text="DER MASCH1NE">DER MASCH1NE </h1>
+                
                 <br><br><br>
                 <h3>
-                    Gesichtserkennung: Hier steht ein kurzer einleitender Text
+                    Facial Recognition: Mithilfe von Machine Learning können Computer ihr Gesicht interpretieren.
                 </h3>
             </div>
             
         </div>
 
         <div id="state-01" class="hide">
+            <span class="title-state">Test Text</span>
             <div class="wrapper-title">
-                <span>State 01</span>
+                <span class="headline">Datenschutz</span>
+                <br><br>
+                <p>
+                    Anlässlich der vor kurzem in Kraft getretenen Datenschutz-Grundverordnung möchten wir sie hiermit über den Prozess der Datenverarbeitung aufklären.
+                    <br><br>
+                    Zur Analyse ihres Gesichtes, werden die Informationen an die Schnittstelle des Services Face von Microsoft Azure geschickt und ausgewertet. Die Daten können nicht mit ihrer Identität in Verbindung gebracht werden. Ihre Daten werden im Rahmen der Langen Nacht der Wissenschaften anonymisiert abgebildet. Eine weitere Verwendung ist ausgeschlossen.
+                    <br><br> 
+                    Für weitere Informationen fragen sie uns gerne direkt.
+                </p>
             </div>
         </div>
 
         <div id="state-02" class="hide">
+            <span class="title-state">Test Text</span>
             <div class="wrapper-title">
                 <span>State 02</span>
             </div>
         </div>
 
         <div id="state-03" class="hide">
+            <span class="title-state">Test Text</span>
             <div class="wrapper-title">
                 <span>State 03</span>
             </div>
         </div>
 
         <div id="state-04" class="hide">
+            <span class="title-state">Test Text</span>
             <div class="wrapper-title">
                 <span>State 04</span>
             </div>
         </div>
 
         <div id="state-05" class="hide">
+            <span class="title-state">Test Text</span>
             <div class="wrapper-title">
                 <span>State 05</span>
             </div>
         </div>
 
-        <button class="btn-next" id="next">Starten</button>
-        <button class="btn-cancel" id="cancel">Ablehnen</button>
+        <div class="btn-group">
+            <button class="btn-next" id="next">Starten</button>
+            <button class="btn-cancel" id="cancel">Ablehnen</button>
+        </div>
 
         <script src="./js/index.js"></script>
     </body>

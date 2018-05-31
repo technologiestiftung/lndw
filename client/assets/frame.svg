@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="355px" height="505px" viewBox="0 0 355 505" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polyline id="Rectangle-9" stroke="#96CBDB" stroke-width="2" points="2 27 2 2 27 2"></polyline>
+        <polyline id="Rectangle-9-Copy-2" stroke="#96CBDB" stroke-width="2" transform="translate(340.500000, 14.500000) rotate(-270.000000) translate(-340.500000, -14.500000) " points="328 27 328 2 353 2"></polyline>
+        <polyline id="Rectangle-9-Copy" stroke="#96CBDB" stroke-width="2" transform="translate(340.500000, 490.500000) rotate(-180.000000) translate(-340.500000, -490.500000) " points="328 503 328 478 353 478"></polyline>
+        <polyline id="Rectangle-9-Copy-3" stroke="#96CBDB" stroke-width="2" transform="translate(14.500000, 490.500000) rotate(-90.000000) translate(-14.500000, -490.500000) " points="2 503 2 478 27 478"></polyline>
+    </g>
+</svg>

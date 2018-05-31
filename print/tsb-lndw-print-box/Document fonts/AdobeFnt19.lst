@@ -1,0 +1,29 @@
+%!Adobe-FontList 1.19
+%Locale:0x409
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:MaisonMono-Bold
+FamilyName:Maison Mono
+StyleName:Bold
+MenuName:Maison Mono
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Maison Mono Bold
+WritingScript:Roman
+OutlineFileName:\Maison Mono Bold.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:20516
+FileModTime:1447701300
+NameArray:0,Mac,18,Maison Mono Bold
+NameArray:0,Mac,4,Maison Mono Bold
+NameArray:0,Win,1,Maison Mono
+%EndFont
+
