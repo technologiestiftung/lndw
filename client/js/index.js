@@ -1,7 +1,7 @@
 var vidWidth = 731;
 var vidHeight = 550;
-var title, info, prompt, video, container, devices, id, config, canvas;
-var blockDate, btnNext, countdown = 6, valueEmotion = 0, emotionString = '', hairString = '', valueHair = 0;
+var title, info, prompt, video, container, devices, id, config, canvas, context;
+var blockDate, btnNext, countdown = 5, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
 
 config = {
     state: 0,
@@ -9,15 +9,19 @@ config = {
 
 function takeSnapshot() {
     let src = document.getElementById('video');
-    let canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
+    canvas = document.getElementById('canvas');
+    context = canvas.getContext('2d');
     canvas.width = vidHeight;
     canvas.height = vidWidth;
     context.rotate(90 * Math.PI / 180);
     context.scale(1,-1);
     context.drawImage(video, 0, 0, vidWidth, vidHeight);
     let data = canvas.toDataURL();
+
+    document.querySelector('.canvas-wrapper').style.opacity = 1;
     saveSnapshot(data);
+    document.getElementById('analysis').style.opacity = 0;
+    clearAnalysis();
 }
 
 function setTimer() {
@@ -70,38 +74,84 @@ function saveSnapshot(img){
 }
 
 function uploadcomplete(event){
+    let wrapperAnalysis = document.getElementById('analysis');
+    wrapperAnalysis.classList.remove('hide');
+    document.getElementById('analysis').style.opacity = 1;
     let data = JSON.parse(event.target.responseText)
+    let response = data[0].faceAttributes;
+
+    let emotions = {
+        'happiness': 'glücklich',
+        'surprise': 'überrascht',
+        'anger': 'wütend',
+        'contempt': 'missachtend',
+        'disguist': 'ekelnd',
+        'fear': 'ängstlich',
+        'neutral': 'neutral',
+        'sadness': 'traurig'
+    };
+
+    let hairColors = {
+        'black': 'schwarz',
+        'brown': 'braun',
+        'blond': 'blond',
+        'other': 'andere',
+        'red': 'rot',
+        'gray': 'grau'
+    };
+
     let gender = document.querySelector('#p-gender');
     let age = document.querySelector('#p-age');
     let emotion = document.querySelector('#p-emotion');
+    let glasses = document.querySelector('#p-glasses');
     let hair = document.querySelector('#p-hair');
+    
+    gender.innerHTML = (response.gender == 'male') ? 'männlich': 'weiblich';
+    age.innerHTML = response.age + ' Jahre';
 
     console.log(data);
-
     
-    gender.innerHTML = (data[0].faceAttributes.gender == 'male') ? 'männlich': 'weiblich';
-    age.innerHTML = data[0].faceAttributes.age + ' Jahre';
-    
-    for (var property in data[0].faceAttributes.emotion) {
-        if (data[0].faceAttributes.emotion.hasOwnProperty(property)) {
-            valueEmotion = (data[0].faceAttributes.emotion[property] > valueEmotion) ? data[0].faceAttributes.emotion[property] : valueEmotion;
-            if (valueEmotion === data[0].faceAttributes.emotion[property]) { emotionString = property }
-        }
-    }
-    
-    for (var property in data[0].faceAttributes.hair.hairColor) {
-        if (data[0].faceAttributes.hair.hairColor.hasOwnProperty(property)) {
-            console.log(property);
-            valueHair = (data[0].faceAttributes.hair.hairColor[property] > valueHair) ? data[0].faceAttributes.hair.hairColor[property] : valueHair;
-            if (valueHair === data[0].faceAttributes.hair.hairColor[property]) { hairString = property }
+    for (var property in response.emotion) {
+        if (response.emotion.hasOwnProperty(property)) {
+            valueEmotion = (response.emotion[property] > valueEmotion) ? response.emotion[property] : valueEmotion;
+            if (valueEmotion === response.emotion[property]) { 
+                for (var responseEmotion in emotions) {
+                    emotionString = emotions[responseEmotion];
+                }
+            }
         }
     }
 
-    hair.innerHTML = hairString + '(' + valueHair + ')';
-    emotion.innerHTML = emotionString + '(' + valueEmotion + ')';
+    console.log(emotionString);
 
-    console.log(data);
+    emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
+    
+    for (var property in response.hair.hairColor) {
+        let stringTempHair = response.hair.hairColor[property].color;
+        valueTempHair =  response.hair.hairColor[property].confidence;
+        valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
+        if (valueHair === valueTempHair) { 
+            for (var responseHairColor in hairColors) {
+                stringHair = hairColors[stringTempHair];
+            };
+        };
+    }
+    hair.innerHTML = stringHair + ' (' + valueHair + ')';
+    glasses.innerHTML = (response.glasses == 'ReadingGlasses') ? 'Ja' : 'Nein';
+}
 
+function createGlitch() {
+    // console.log(context);
+    var imageData = context.getImageData( 0, 0, canvas.width, canvas.height );
+ 
+    glitch()
+        .fromImageData( imageData )
+        .toDataURL()
+        .then(function( dataURL ) {
+            var glitchedImg = new Image();
+            glitchedImg.src = dataURL;
+            document.body.appendChild( glitchedImg );
+    });
 }
 
 function getDate() {
@@ -117,6 +167,15 @@ function getDate() {
     return(today);
 }
 
+function clearAnalysis() {
+    document.getElementById('p-gender').innerHTML = '';
+    document.getElementById('p-age').innerHTML = '';
+    document.getElementById('p-glasses').innerHTML = '';
+    document.getElementById('p-hair').innerHTML = '';
+    document.getElementById('p-emotion').innerHTML = '';
+    document.getElementById('p-makeup').innerHTML = '';
+}
+
 btnNext = document.querySelector('#next');
 btnCancel = document.querySelector('#cancel');
 video = document.querySelector('#video');
@@ -127,7 +186,7 @@ btnCancel.addEventListener('click', () => {
     btnNext.innerHTML = 'Starten'; 
     video.classList.add('hide');
 
-    for (let index = 0; index < 6; index++) {
+    for (let index = 0; index < 5; index++) {
         const id = '#state-0' + index;
         document.querySelector(id).classList.add('hide');
     }
@@ -142,8 +201,10 @@ btnCancel.addEventListener('click', () => {
 
 btnNext.addEventListener('click', () => {
     document.querySelector('#cancel').classList.remove('hide');
+    // if (config.state == 4) {
+    //     window.location.reload(true);
+    // }
     config.state += 1;
-
     if (config.state == 1) {
         btnNext.innerHTML = 'Zustimmen';  
         document.getElementById('frame-wrapper').classList.add('hide');
@@ -152,26 +213,31 @@ btnNext.addEventListener('click', () => {
         btnNext.innerHTML = 'Fotografieren';  
         btnCancel.innerHTML = 'Abbrechen';
         document.getElementById('frame-wrapper').classList.remove('hide');
+        if (context != undefined) { context.clearReact(0,0, vidWidth, vidHeight); }
     } else if (config.state == 3) {
         setTimer();
         btnNext.innerHTML = 'Weiter';  
+        document.getElementById('analysis').style.opacity = 0;
         document.querySelector('.countdown-wrapper').classList.remove('hide');
-        document.querySelector('.canvas-wrapper').classList.remove('hide');
         document.getElementById('frame-wrapper').classList.add('hide');
     } else if (config.state == 4) {
+        // createGlitch();
+        clearAnalysis();
         document.querySelector('.countdown-wrapper').classList.add('hide');
+        document.getElementById('frame-wrapper').classList.add('hide');
+        document.querySelector('.canvas-wrapper').classList.add('hide');
         video.classList.add('hide');
-        btnNext.innerHTML = 'Weiter';
-    } else if (config.state == 5) {
         btnCancel.innerHTML = 'Neu starten';
         document.querySelector('#next').classList.add('hide');
+        valueHair = 0;
+        valueEmotion = 0;
     }
     
-    for (let stateIndex = 0; stateIndex < 6; stateIndex++) {
+    for (let stateIndex = 0; stateIndex < 5; stateIndex++) {
         
         if (config.state == stateIndex) {
 
-            for (let index = 0; index < 6; index++) {
+            for (let index = 0; index < 5; index++) {
                 const id = '#state-0' + index;
                 
                 if (index == config.state) {

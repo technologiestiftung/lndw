@@ -26,6 +26,26 @@ h3 {
     }
 }
 
+.param-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: .7rem;
+
+    span {
+        font-family: "Maison Mono Regular";
+        text-transform: uppercase;
+        font-size: .8rem;
+        letter-spacing: 2px;
+        margin-bottom: .25rem;
+        background: none;
+    }
+    
+    span.response {
+        letter-spacing: 1px;
+        font-size: 1.5rem;
+    }
+}
+
 .icon-wrapper {
     position: absolute;
     top: 40px;
@@ -39,14 +59,15 @@ h3 {
 
 .title-state {
     position: absolute;
-    left: 185px;
+    left: 180px;
     top: 50px;
     text-transform: uppercase;
-    letter-spacing: .5px;
+    letter-spacing: 1px;
 }
 
 .btn-group {
     position: absolute;
+    width: 400px;
     bottom: 50px;
 }
 
@@ -66,32 +87,65 @@ h3 {
 }
 
 .canvas-wrapper {
-    transform: translateX(230px) translateY(100px);
+    transform: translateX(175px) translateY(100px);
 }
 
 .wrapper-analysis {
+    display: flex;
+    flex-direction: row;
     position: absolute;
-    border: 1px solid red;
     width: 650px;
+    height: 300px;
     left: 175px;
     top: 900px;
+
+    div {
+        width: 90%;
+        margin-right: 1rem;
+    }
+}
+
+.image-wrapper {
+    width: 200px;
+    background: red;
 }
 
 .countdown-wrapper {
     position: absolute;
-    left: 320px;
+    left: 252px;
     top: 390px;
-    color: $color-bg-highlighted;
+    width: 500px;
+    height: 500px;
+    color: $color-primary;
+
+    span {
+        position: absolute;
+
+    }
+
+    span:nth-child(1) {
+        width: 100px;
+        top: 72px;
+    }
+
+    span:nth-child(3) {
+        position: absolute;
+        top: 72px;
+        width: 200px;
+        left: 320px;
+    }
 }
 
 .countdown-number {
+    position: absolute;
+    left: 95px;
     font-size: 10rem;
 }
 
 .frame-wrapper {
     position: absolute;
-    top: 118px;
-    left: 254px;
+    top: 98px;
+    left: 201px;
     width: 500px;
     height: 700px;
     // overflow: visible;
@@ -144,7 +198,7 @@ h3 {
     position: absolute;
     top: 220px;
     opacity: 1;
-    transform: rotate(90deg) translateY(-138px) translateX(-29px) scale(1, -1);
+    transform: rotate(90deg) translateY(-83px) translateX(-29px) scale(1, -1);
 }
 
 #canvas {
