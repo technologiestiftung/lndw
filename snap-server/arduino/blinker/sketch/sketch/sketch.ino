@@ -23,6 +23,10 @@ void setup() {
   strip.show();
 }
 
+int default_r = 0;
+int default_g = 0;
+int default_b = 0;
+
 void loop() {
 
   if(blinking){
@@ -46,24 +50,28 @@ void loop() {
       Serial.println(textstr);
 
       if(command == "lightOn"){
+        //This is currently not working
         strip.setPixelColor(textstr.toInt(), 255 ,255 , 255);
       }else if(command == "lightOff"){
+        //This is currently not working
         strip.setPixelColor(textstr.toInt(), 0, 0, 0);
       }else if(command == "blinkOn"){
         blinking = true; blink_state = true;
       }else if(command == "blinkOff"){
         blinking = false;
-        for(int i = 0; i<= 16; i++){
-          strip.setPixelColor(i, 0, 0, 0);
-        }
+        default_r = 0;
+        default_g = 0;
+        default_b = 0;
       }else if(command == "allOn"){
-        for(int i = 0; i<= 16; i++){
-          strip.setPixelColor(i, 255, 255, 255);
-        }
+        blinking = false;
+        default_r = 255;
+        default_g = 255;
+        default_b = 255;
       }else if(command == "allOff"){
-        for(int i = 0; i<= 16; i++){
-          strip.setPixelColor(i, 0, 0, 0);
-        }
+        blinking = false;
+        default_r = 0;
+        default_g = 0;
+        default_b = 0;
       }
       
       textstr = "";
@@ -92,7 +100,7 @@ void loop() {
     }
   }else{
     for(int i = 0; i<= 16; i++){
-      strip.setPixelColor(i, 0, 0, 0);
+      strip.setPixelColor(i, default_r, default_g, default_b);
     }
   }
   
