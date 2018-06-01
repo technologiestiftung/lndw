@@ -2,5 +2,6 @@ node_modules
 config.json
 .DS_Store
 /client/node_modules
+/client/.DS_STORE
 database.db
 snap-server/uploads
