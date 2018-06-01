@@ -1,3 +1,49 @@
+const SerialPort = require("serialport")
+
+const megaID = '55736303739351D012A1'
+
+let arduinos = {
+	  mega:null, 
+	  other:null
+	}, 
+	port = null,
+	message = ''
+
+SerialPort.list().then(list=>{
+	list.forEach(l=>{
+		if(('manufacturer' in l) && l.manufacturer != undefined && l.manufacturer.indexOf('Arduino')>-1){
+		  if(('serialNumber' in l)&&(megaID == l.serialNumber)){
+		    arduinos.mega = l
+		  }else{
+		    arduinos.other = l
+		  }
+		}
+	})
+
+  	port = new SerialPort(arduinos.other.comName, {
+	   baudRate: 9600
+	})
+
+	port.on('error', function(err) {
+	  console.log('Error: ', err.message)
+	})
+
+	port.on('data', function(data){
+	  message += data.toString('utf8')
+	  if(message.indexOf('\n')>=0){
+	    console.log('MSG:', message)
+	    message = ''
+	  }
+	})
+
+	port.on('open', function(){
+	  console.log('Serial Port Opend')
+	})
+
+}).catch(err=>{
+  throw err
+})
+
 const	sqlite = require('better-sqlite3'),
       	db = new sqlite(__dirname + '/database.db'),
       	express = require('express'),
@@ -51,6 +97,17 @@ app.get("/hello", (req, res)=>{
 app.get("/data", (req, res)=>{
 	let rows = db.prepare('SELECT * FROM face_metrics').all([])
 	res.status(500).json(rows)
+})
+
+app.get("/command/:cmd/:data", (req, res)=>{
+
+    port.write('$')
+    port.write(req.params.cmd)
+    port.write('$')
+    port.write(req.params.data)
+    port.write('\n')
+
+	res.status(500).json({msg:'Command send.'})
 })
 
 app.get("/print", (req, res)=>{
@@ -239,7 +296,7 @@ function transBool(v){
 	return v
 }
 
-const port = process.env.PORT || 5971;
-app.listen(port, () => {
- console.log("Listening on " + port);
+const web_port = process.env.PORT || 5971;
+app.listen(web_port, () => {
+ console.log("Listening on " + web_port);
 })
