@@ -69,7 +69,8 @@ function saveSnapshot(img){
     ajax.addEventListener("load", function(event) { 
         uploadcomplete(event);
     }, false);
-    ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
+    // ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
+    ajax.open("POST", "http://localhost:5971/analyse");
     ajax.send(formdata);
 }
 
@@ -79,6 +80,9 @@ function uploadcomplete(event){
     document.getElementById('analysis').style.opacity = 1;
     let data = JSON.parse(event.target.responseText)
     let response = data[0].faceAttributes;
+
+    // add css class here to canvas
+    document.getElementById('canvas').classList.add('scanning');
 
     let emotions = {
         'happiness': 'glücklich',
@@ -113,11 +117,11 @@ function uploadcomplete(event){
     
     for (var property in response.emotion) {
         if (response.emotion.hasOwnProperty(property)) {
+            let valueTempEmotion = response.emotion[property];
+            let stringTempEmotion = property;
             valueEmotion = (response.emotion[property] > valueEmotion) ? response.emotion[property] : valueEmotion;
-            if (valueEmotion === response.emotion[property]) { 
-                for (var responseEmotion in emotions) {
-                    emotionString = emotions[responseEmotion];
-                }
+            if (valueEmotion === valueTempEmotion) { 
+                emotionString = emotions[stringTempEmotion];
             }
         }
     }

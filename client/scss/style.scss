@@ -308,4 +308,45 @@ h3 {
     -moz-animation: flickerAnimation 1s infinite;
     -o-animation: flickerAnimation 1s infinite;
     animation: flickerAnimation 1s infinite;
-  }
+    }
+
+.overlay {
+    width: 10px;
+    position: absolute;
+    height: 100px;
+}
+
+.scanning:after {
+    content: '';
+    /* make the element cover the whole thing */
+    display: block;
+    width: 530px;
+    height: 600px;
+    position: absolute;
+    top: 200px;
+    left: 150px;
+    /* and sit in front */
+    z-index: 1;
+    /* gradient with a radar like fade */
+    background:
+        linear-gradient(90deg,
+        rgba(0,0,0,0),
+        rgba(0,0,0,0) 50%,
+        $color-bg-highlighted 55%,
+        $color-primary-unselected 56%,
+        rgba(0,0,0,0) 56%,
+        rgba(0,0,0,0)
+        );
+    /* make it big enough so when we slide it around still covers whole image */
+    background-size:     300% 100%;
+    background-repeat:   no-repeat;
+    /* start with the scan bar just off the left side */
+    background-position: 84% center;
+    -webkit-animation:   scan 5s infinite ease;
+    }
+    
+    @-webkit-keyframes scan {
+    /* finish with the scan bar just off the right side */
+    100% { background-position: 25% bottom; }
+    }
+    
