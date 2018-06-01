@@ -4,8 +4,10 @@
     <body>
         <link rel="stylesheet" href="root.css">
 
-        <video id="video" class="hide"></video>
-        <canvas id="canvas" class="canvas-wrapper"></canvas>
+        <div class="image-wrapper"> 
+            <video id="video" class="hide"></video>
+            <canvas id="canvas" class="canvas-wrapper"></canvas>
+        </div>
 
         <div id="canvas" class="countdown-wrapper hide">
             <span>Foto in</span>
@@ -71,60 +73,51 @@
 
         <div id="state-03" class="hide">
             <span class="title-state">04 Analyse Foto</span>
-            <div class="wrapper-analysis">
-                <span>Auswertung</span>
-
+            <div id="analysis" class="wrapper-analysis hide">
                 <div>
                     <div class="param-wrapper">
                         <span>Geschlecht:</span>
-                        <span id="p-gender"></span>
+                        <span class="response" id="p-gender"></span>
                     </div>
                     <div class="param-wrapper">
                         <span>Alter:</span>
-                        <span id="p-age"></span>
+                        <span class="response" id="p-age"></span>
                     </div>
                     <div class="param-wrapper">
                         <span>Brille:</span>
-                        <span id="p-glasses"></span>
+                        <span class="response" id="p-glasses"></span>
                     </div>
                 </div>
 
                 <div>
                     <div class="param-wrapper">
                         <span>Haarfarbe:</span>
-                        <span id="p-hair"></span>
+                        <span class="response" id="p-hair"></span>
                     </div>
                     <div class="param-wrapper">
                         <span>Emotion:</span>
-                        <span id="p-emotion"></span>
+                        <span class="response" id="p-emotion"></span>
                     </div>
                     <div class="param-wrapper">
                         <span>Makeup:</span>
-                        <span id="p-makeup"></span>
+                        <span class="response" id="p-makeup"></span>
                     </div>
                 </div>
 
-                <div class="param-wrapper">
-                    <span>Gesichts ID:</span>
-                    <span id="p-id"></span>
-                </div>
 
             </div>
             </div>
         </div>
 
         <div id="state-04" class="hide">
-            <span class="title-state">Test Text</span>
+            <span class="title-state">05 Weitere Informationen</span>
             <div class="wrapper-title">
-                <span>State 04</span>
-            </div>
-        </div>
-
-        <div id="state-05" class="hide">
-            <span class="title-state">Test Text</span>
-            <div class="wrapper-title">
-                <span>State 05</span>
-            </div>
+                    <span class="headline">Neugierig?</span>
+                    <br><br>
+                    <p>
+                        Hier stehen weitere Informationen.
+                    </p>
+                </div>
         </div>
 
         <div class="btn-group">
@@ -133,5 +126,6 @@
         </div>
 
         <script src="./js/index.js"></script>
+        <script src="./js/glitch.min.js"></script>
     </body>
 </html>
