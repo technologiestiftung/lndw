@@ -111,7 +111,7 @@ app.get("/command/:cmd/:data", (req, res)=>{
 })
 
 app.get("/print", (req, res)=>{
-	let stdout = execSync(' arduino --upload /Users/sebastianmeier/Sites/TSB/lndw-2018/snap-server/arduino/src/sketch/sketch.ino --port /dev/cu.usbmodem14141 --board arduino:avr:mega');
+	let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
 	let stdout1 = execSync('open -a "Google Chrome"');
 	res.status(500).json({"status":"printing"})
 })
@@ -259,8 +259,8 @@ function msProcess (filename, req, res){
 
 							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
 
-							let stdout = execSync(' arduino --upload /Users/sebastianmeier/Sites/TSB/lndw-2018/snap-server/arduino/src/sketch/sketch.ino --port /dev/cu.usbmodem14141 --board arduino:avr:mega');
-							let stdout1 = execSync('open -a "Google Chrome"');
+							// let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+							// let stdout1 = execSync('open -a "Google Chrome"');
 
 						 })
 
