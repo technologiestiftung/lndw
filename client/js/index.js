@@ -1,13 +1,14 @@
 var vidWidth = 731;
 var vidHeight = 550;
 var title, info, prompt, video, container, devices, id, config, canvas, context;
-var blockDate, btnNext, countdown = 5, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
+var blockDate, btnNext, countdown = 4, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
 
 config = {
     state: 0,
 };
 
 function takeSnapshot() {
+    console.log('take snapshot')
     let src = document.getElementById('video');
     canvas = document.getElementById('canvas');
     context = canvas.getContext('2d');
@@ -18,10 +19,16 @@ function takeSnapshot() {
     context.drawImage(video, 0, 0, vidWidth, vidHeight);
     let data = canvas.toDataURL();
 
+
     document.querySelector('.canvas-wrapper').style.opacity = 1;
     saveSnapshot(data);
     document.getElementById('analysis').style.opacity = 0;
     clearAnalysis();
+}
+
+function toggleOverlay() {
+    var overlay = document.querySelector('.overlay');
+    overlay.classList.toggle('scanning');
 }
 
 function setTimer() {
@@ -35,9 +42,10 @@ function setTimer() {
         }
         else if (countdown === 0) {
             takeSnapshot();
-            document.querySelector('.canvas-wrapper').classList.remove('hide');
-            document.querySelector('.countdown-wrapper').classList.add('hide');
-            countdown = 6;
+            toggleOverlay();
+            document.querySelector('.canvas-wrapper').classList.remove('hidden');
+            document.querySelector('.countdown-wrapper').classList.add('hidden');
+            countdown = 4;
         }
     },1000);
 }
@@ -63,6 +71,7 @@ function streamCamera() {
 }
 
 function saveSnapshot(img){
+    console.log('saveSnapshot')
     var formdata = new FormData();
     formdata.append("base64image", img);
     var ajax = new XMLHttpRequest();
@@ -76,10 +85,13 @@ function saveSnapshot(img){
 
 function uploadcomplete(event){
     let wrapperAnalysis = document.getElementById('analysis');
-    wrapperAnalysis.classList.remove('hide');
+    wrapperAnalysis.classList.remove('hidden');
     document.getElementById('analysis').style.opacity = 1;
-    let data = JSON.parse(event.target.responseText)
-    let response = data[0].faceAttributes;
+    let dataTemp = JSON.parse(event.target.response)
+    let response = dataTemp[0].faceAttributes;
+
+    toggleOverlay();
+    togglePrintOverlay();
 
     // add css class here to canvas
     document.getElementById('canvas').classList.add('scanning');
@@ -113,7 +125,6 @@ function uploadcomplete(event){
     gender.innerHTML = (response.gender == 'male') ? 'männlich': 'weiblich';
     age.innerHTML = response.age + ' Jahre';
 
-    console.log(data);
     
     for (var property in response.emotion) {
         if (response.emotion.hasOwnProperty(property)) {
@@ -125,8 +136,6 @@ function uploadcomplete(event){
             }
         }
     }
-
-    console.log(emotionString);
 
     emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
     
@@ -171,6 +180,10 @@ function getDate() {
     return(today);
 }
 
+function togglePrintOverlay() {
+    document.querySelector('#printing').classList.toggle('hidden');
+}
+
 function clearAnalysis() {
     document.getElementById('p-gender').innerHTML = '';
     document.getElementById('p-age').innerHTML = '';
@@ -188,51 +201,59 @@ btnCancel.addEventListener('click', () => {
     let currentState = config.state;
     config.state = 0; 
     btnNext.innerHTML = 'Starten'; 
-    video.classList.add('hide');
+    video.classList.add('hidden');
 
     for (let index = 0; index < 5; index++) {
         const id = '#state-0' + index;
-        document.querySelector(id).classList.add('hide');
+        document.querySelector(id).classList.add('hidden');
     }
 
-    document.querySelector('#state-00').classList.remove('hide');
-    document.querySelector('#cancel').classList.add('hide');
-    document.querySelector('#next').classList.remove('hide');
-    document.getElementById('frame-wrapper').classList.add('hide');
-    document.querySelector('.canvas-wrapper').classList.add('hide');
-    document.querySelector('.countdown-wrapper').classList.add('hide');
+    document.querySelector('#state-00').classList.remove('hidden');
+    document.querySelector('#cancel').classList.add('hidden');
+    document.querySelector('#next').classList.remove('hidden');
+    document.getElementById('frame-wrapper').classList.add('hidden');
+    document.querySelector('.canvas-wrapper').classList.add('hidden');
+    document.querySelector('.countdown-wrapper').classList.add('hidden');
 });
 
+window.addEventListener('keypress', (event) => {
+    const keyName = event.key;
+    if (keyName == 'n') {
+        btnNext.click();
+    }
+})
+
+
 btnNext.addEventListener('click', () => {
-    document.querySelector('#cancel').classList.remove('hide');
+    document.querySelector('#cancel').classList.remove('hidden');
     // if (config.state == 4) {
     //     window.location.reload(true);
     // }
     config.state += 1;
     if (config.state == 1) {
         btnNext.innerHTML = 'Zustimmen';  
-        document.getElementById('frame-wrapper').classList.add('hide');
+        document.getElementById('frame-wrapper').classList.add('hidden');
     } else if (config.state == 2) { 
-        video.classList.remove('hide');
+        video.classList.remove('hidden');
         btnNext.innerHTML = 'Fotografieren';  
         btnCancel.innerHTML = 'Abbrechen';
-        document.getElementById('frame-wrapper').classList.remove('hide');
-        if (context != undefined) { context.clearReact(0,0, vidWidth, vidHeight); }
+        document.getElementById('frame-wrapper').classList.remove('hidden');
     } else if (config.state == 3) {
         setTimer();
         btnNext.innerHTML = 'Weiter';  
         document.getElementById('analysis').style.opacity = 0;
-        document.querySelector('.countdown-wrapper').classList.remove('hide');
-        document.getElementById('frame-wrapper').classList.add('hide');
+        document.querySelector('.countdown-wrapper').classList.remove('hidden');
+        document.getElementById('frame-wrapper').classList.add('hidden');
     } else if (config.state == 4) {
         // createGlitch();
+        togglePrintOverlay();
         clearAnalysis();
-        document.querySelector('.countdown-wrapper').classList.add('hide');
-        document.getElementById('frame-wrapper').classList.add('hide');
-        document.querySelector('.canvas-wrapper').classList.add('hide');
-        video.classList.add('hide');
+        document.querySelector('.countdown-wrapper').classList.add('hidden');
+        document.getElementById('frame-wrapper').classList.add('hidden');
+        document.querySelector('.canvas-wrapper').classList.add('hidden');
+        video.classList.add('hidden');
         btnCancel.innerHTML = 'Neu starten';
-        document.querySelector('#next').classList.add('hide');
+        document.querySelector('#next').classList.add('hidden');
         valueHair = 0;
         valueEmotion = 0;
     }
@@ -245,10 +266,10 @@ btnNext.addEventListener('click', () => {
                 const id = '#state-0' + index;
                 
                 if (index == config.state) {
-                    document.querySelector(id).classList.remove('hide');
+                    document.querySelector(id).classList.remove('hidden');
     
                 } else if (index != config.state) {
-                    document.querySelector(id).classList.add('hide');
+                    document.querySelector(id).classList.add('hidden');
                 }
             }
         }

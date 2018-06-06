@@ -3,20 +3,23 @@
     <head></head>
     <body>
         <link rel="stylesheet" href="root.css">
-
+        <div class="overlay-printing fadeInOut hidden" id="printing">
+            <span>IHRE ANALYSE WIRD GEDRUCKT</span>
+        </div>
         <div class="image-wrapper"> 
-            <div class="overlay scanning"></div>
-            <video id="video" class="hide"></video>
+            <div class="overlay"></div>
+            <video id="video" class="fadeInOut hidden"></video>
             <canvas id="canvas" class="canvas-wrapper"></canvas>
         </div>
 
-        <div id="canvas" class="countdown-wrapper hide">
+        <div id="canvas" class="countdown-wrapper fadeInOut hidden">
             <span>Foto in</span>
             <span class="countdown-number" id="countdown-num"></span>
-            <span>Sekunden</span>
+        <span>Sekunden</span>
+
         </div>
 
-        <div id="frame-wrapper" class="frame-wrapper hide">
+        <div id="frame-wrapper" class="frame-wrapper fadeInOut hidden">
                 <img src="assets/frame.svg" alt="">
 
                 <span class="animate-flicker">
@@ -40,20 +43,20 @@
 
         <div id="state-00">
             <span class="title-state">01 facial recognition</span>
-            <div class="wrapper-title">
+            <div class="wrapper-title fadeInOut">
                 <h1 class="glitch" data-text="M1T DEN">M1T DEN </h1>
                 <h1 class="glitch" data-text="AUGEN">AUGEN </h1>
                 <h1 class="glitch" data-text="DER MASCH1NE">DER MASCH1NE </h1>
                 
                 <br><br><br>
-                <h3>
+                <h3 class="">
                     MASCHINELLES SEHEN: POTENTIALE UND GEFAHREN KÜNSTLICHER INTELLIGENZ
                 </h3>
             </div>
             
         </div>
 
-        <div id="state-01" class="hide">
+        <div id="state-01" class="hidden fadInOut">
             <span class="title-state">02 Aufklärung</span>
             <div class="wrapper-title">
                 <span class="headline">Datenschutz</span>
@@ -68,17 +71,17 @@
             </div>
         </div>
 
-        <div id="state-02" class="hide">
+        <div id="state-02" class="hidden fadeInOut">
             <span class="title-state">03 SCAN FOTO</span>
         </div>
 
-        <div id="state-03" class="hide">
+        <div id="state-03" class="hidden fadeInOut">
             <span class="title-state">04 Analyse Foto</span>
-            <div id="analysis" class="wrapper-analysis hide">
+            <div id="analysis" class="wrapper-analysis hidden fadeInOut">
                 <div>
                     <div class="param-wrapper">
                         <span>Geschlecht:</span>
-                        <span class="response" id="p-gender"></span>
+                        <span class="response shadow" id="p-gender"></span>
                     </div>
                     <div class="param-wrapper">
                         <span>Alter:</span>
@@ -110,7 +113,7 @@
             </div>
         </div>
 
-        <div id="state-04" class="hide">
+        <div id="state-04" class="hidden fadeInOut">
             <span class="title-state">05 Weitere Informationen</span>
             <div class="wrapper-title">
                     <span class="headline">Neugierig?</span>
@@ -122,7 +125,7 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn-next" id="next">Starten</button>
+            <button class="btn-next boxShadow" id="next">Starten</button>
             <button class="btn-cancel" id="cancel">Ablehnen</button>
         </div>
 

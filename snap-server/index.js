@@ -259,8 +259,8 @@ function msProcess (filename, req, res){
 
 							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
 
-							// let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
-							// let stdout1 = execSync('open -a "Google Chrome"');
+							let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+							let stdout1 = execSync('open -a "Google Chrome"');
 
 						 })
 

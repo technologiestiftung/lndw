@@ -18,12 +18,27 @@ h3 {
     margin: 200px 0px 100px 180px;
     background: $color-bg-highlighted;
     width: 65vw;
+    position: absolute;
 
     p {
         text-transform: uppercase;
         line-height: 150%;
         letter-spacing: .5px;
     }
+}
+
+.fadeInOut {
+    transition-duration: 0.5s;
+    transition-property: opacity, visibility;
+    transition-delay: 1s;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition-duration: 0.5s;
+    transition-property: opacity, visibility;
+    transition-delay: 0s;
 }
 
 .param-wrapper {
@@ -81,6 +96,48 @@ h3 {
     left: 22px;
 }
 
+.textShadow {
+    text-shadow: 0 0 2rem $color-primary-unselected;
+    animation: blinkShadowText 1s ease infinite;
+}
+
+@keyframes blinkShadowText {
+    0% { text-shadow: 0 0 0rem $color-primary-unselected; }
+    50% { text-shadow: 0 0 1rem $color-primary-unselected; }
+    100% { text-shadow: 0 0 0rem $color-primary-unselected; }
+}
+
+.boxShadow {
+    box-shadow: 0 0 2rem $color-primary-unselected;
+    animation: blinkShadowBox 2s ease infinite;
+}
+
+@keyframes blinkShadowBox {
+    0% { box-shadow: 0 0 0rem $color-select; }
+    50% { box-shadow: 0 0 1.5rem $color-select; }
+    100% { box-shadow: 0 0 0rem $color-select; }
+}
+
+
+
+.overlay-printing {
+    position: absolute;
+    text-transform: uppercasse;
+    top: 450px;
+    color: $color-bg-highlighted;
+    left: 253px;
+    z-index: 1000;
+    font-size: 1.5rem;
+    text-shadow: 0 0 2rem $color-primary-unselected;
+    animation: blink .3s infinite linear;
+}
+
+@keyframes blink {
+    0% { opacity: 0 }
+    50% { opacity: 1 }
+    100% { opacity: 0 }
+}
+
 .headline {
     font-size: 2rem;
     text-transform: uppercase;
@@ -97,7 +154,7 @@ h3 {
     width: 650px;
     height: 300px;
     left: 175px;
-    top: 900px;
+    top: 875px;
 
     div {
         width: 90%;
@@ -206,7 +263,7 @@ h3 {
 }
 
 .hide {
-    display: none;
+    visibility: hidden;
 }
 
 .btn-next {
@@ -320,33 +377,32 @@ h3 {
     content: '';
     /* make the element cover the whole thing */
     display: block;
-    width: 530px;
-    height: 600px;
+    width: 548px;
+    height: 730px;
     position: absolute;
-    top: 200px;
-    left: 150px;
+    top: 100px;
+    left: 174px;
     /* and sit in front */
     z-index: 1;
     /* gradient with a radar like fade */
     background:
-        linear-gradient(90deg,
+        linear-gradient(0deg,
         rgba(0,0,0,0),
-        rgba(0,0,0,0) 50%,
-        $color-bg-highlighted 55%,
-        $color-primary-unselected 56%,
-        rgba(0,0,0,0) 56%,
+        rgba(0,0,0,0) 45%,
+        $color-primary 55%,
+        $color-primary-selec 53%,
+        rgba(0,0,0,0) 55%,
         rgba(0,0,0,0)
         );
-    /* make it big enough so when we slide it around still covers whole image */
-    background-size:     300% 100%;
-    background-repeat:   no-repeat;
-    /* start with the scan bar just off the left side */
-    background-position: 84% center;
-    -webkit-animation:   scan 5s infinite ease;
+    -webkit-animation:   scan 5s linear infinite;
     }
     
     @-webkit-keyframes scan {
     /* finish with the scan bar just off the right side */
-    100% { background-position: 25% bottom; }
+        from {
+            background-position: 0 700px;
+        } to { 
+            background-position: 0 0;
+        }
     }
     
