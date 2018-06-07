@@ -38,3 +38,7 @@ If chrome is not available in your path simply add it:
 export PATH=$PATH:/Applications/Arduino.app/Contents/MacOS
 ´´´
 
+## shader 
+
+The code for the shader is written by [Adam Ferris](adamferris.com). All rights belong to the creator.
+
