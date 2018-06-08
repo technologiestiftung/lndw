@@ -2,6 +2,21 @@
 <head>
   <meta charset="UTF-8">
   <title>gush</title>
+<!-- 
+  <div class="bars-wrapper">
+    <div class="top">
+      <img class="bars-01" src="icon-bars.png" alt="">
+      <img class="bars-02" src="icon-bars.png" alt="">
+      <div class="side-block lat" id="block-date">52° 31' 12.0288'' N</div>
+      <div class="side-block lng" id="block-date">13° 24' 17.8344'' E	</div>
+    </div>
+    <div class="bottom">
+      <img class="bars-01" src="icon-bars.png" alt="">
+      <img class="bars-02" src="icon-bars.png" alt="">
+      <div class="side-block lat" id="block-date">52° 31' 12.0288'' N</div>
+      <div class="side-block lng" id="block-date">13° 24' 17.8344'' E	</div>
+    </div>
+  </div> -->
 
   <link rel="image_src" href="http://adamferriss.com/gush/meta.png" />
   <link rel="canonical" href="http://adamferriss.com/gush/index.html" />
@@ -21,30 +36,89 @@
 body{
 	margin: 0;
 	padding: 0;
-  background-color:#000;
+  background-color:#002448;
   overflow: none;
   font-family: "Lucida Console", Monaco, monospace;
 }
-canvas{
+
+canvas {
   z-index: -1;
 }
 
-.logo-tsb {
-    z-index: 1000;
-    height: 100px;
-    width: 100px;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+.bars-wrapper {
+  position: absolute;
+  /* mix-blend-mode: multiply; */
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
 }
 
+.top {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+}
+
+.bars-01 {
+  position: absolute;
+  left: 30px;
+}
+
+.bars-02 {
+  position: absolute;
+  right: 30px;
+}
+
+.side-block {
+    background: #002448;
+    color: #3B7384;
+    display: inline-block;
+    position: absolute;
+    font-size: .8rem;
+    padding: 0px 10px 0px 10px;
+    letter-spacing: 2px;
+}
+
+.lat {
+  position: absolute;
+  left: 500px;
+}
+
+.lng {
+  position: absolute;
+  right: 500px;
+}
+
+.logo-tsb {
+    z-index: 100000;
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+}
+
+.logo-ki {
+    z-index: 100000;
+    height: 215px;
+    width: 500px;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
 
 .overlay {
     filter: hue-rotate(90deg);
     width: 100vw;
     height: 100vh;
     position: absolute;
-    z-index: 1000;
+    z-index: 1;
 
 }
 
@@ -85,6 +159,15 @@ a:hover{
   
 }
 
+.pattern {
+  width: 100vw;
+  height: 100vh;
+  /* background: red; */
+  background: url(pattern.png) top left repeat;
+  position: absolute;
+  z-index: 10000;
+}
+
 #shareButtons{
   z-index:2;
   position: absolute; 
@@ -113,13 +196,17 @@ a:hover{
 </head>
 <body>
   
-
-
-	<div id="container">
-	  <canvas class="overlay" id="canvas" style ="background:black; position:absolute;top:0;left:0;z-index:0; width:100%; height:100%; filter:sepia(100%) hue-rotate(180deg) saturate(2) contrast(2)">
+  <img class="logo-tsb" src="logo-tsb.svg" alt="">
+  <img class="logo-ki" src="logo-ki.svg" alt="">
+  
+  <div id="container">
+    <canvas class="overlay" id="canvas" style ="background:#002448; position:absolute;top:0;left:0;z-index:0; width:100%; height:100%; filter:sepia(100%) hue-rotate(180deg) saturate(2) contrast(2)">
       Sorry but you're browser doesn't support the canvas :(
-    </canvas>
-  </div>
+      </canvas>
+      
+      
+    </div>
+  <div class="pattern"></div>
   <div id="infoBox">
     <p class="blink">1. Enable webcam</p>
     <p>2. Move face</p>
@@ -135,13 +222,11 @@ a:hover{
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
 -->
-<div id="madeBy">
+<!-- <div id="madeBy">
   Made by <a href="http://adamferriss.com">Adam</a><br />
    with help from <a href="http://pixlpa.com">Andrew</a><br />
    
-</div>
-
-<img class="logo-tsb" src="logo-tsb.svg" alt="">
+</div> -->
 
 <script id="baseVs" type="x-shader/x-vertex">
 attribute vec3 pos;
@@ -579,7 +664,7 @@ $("#i").click(function(){
 
 });
 
-setInterval(spectrum, 100);
+// setInterval(spectrum, 100);
 });
 </script>
 
