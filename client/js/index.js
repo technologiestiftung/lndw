@@ -426,7 +426,7 @@ function updateButton(){
 var resetCounter = 0;
 setInterval(()=>{
     resetCounter++
-    if(resetCounter >= 150){
+    if(resetCounter >= 180){
         resetCounter = 0;
         if(config.state != 0){
             config.state = 0;
@@ -448,6 +448,9 @@ function updateState(){
 
             btnNext.innerHTML = 'Starten';  
             btnNext.classList.remove('hidden')
+            config.activeButton = 0;
+            btnNext.focus();
+
 
             btnCancel.classList.add('hidden')
 
@@ -472,6 +475,8 @@ function updateState(){
 
             btnNext.innerHTML = 'Zustimmen';
             btnNext.classList.remove('hidden')
+            config.activeButton = 0;
+            btnNext.focus();
 
             btnCancel.innerHTML = 'Neu starten';
             btnCancel.classList.remove('hidden')
@@ -496,6 +501,8 @@ function updateState(){
 
             btnNext.innerHTML = 'Countdown starten';
             btnNext.classList.remove('hidden')
+            config.activeButton = 0;
+            btnNext.focus();
 
             btnCancel.classList.add('hidden')           
 
@@ -567,6 +574,7 @@ function updateState(){
 
                 btnNext.innerHTML = 'Neu starten';
                 btnNext.classList.remove('hidden')
+                btnNext.focus();
             }, 30000)
         break;
     }

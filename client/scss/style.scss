@@ -3,6 +3,9 @@ body {
     font-family: "Maison Mono Regular";
     color: $color-primary;
 }
+*{
+    cursor:crosshair !important;
+}
 
 h1 {
     font-size: 5rem;
