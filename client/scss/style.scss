@@ -17,7 +17,7 @@ h3 {
 #postcard {
     position: absolute;
     left: 182px;
-    top: 400px;
+    top: 100px;
     height: 731px;
     width: 550px;
 }
@@ -33,6 +33,11 @@ h3 {
         line-height: 150%;
         letter-spacing: .5px;
     }
+}
+
+#state-04 .wrapper-title{
+    position:absolute;
+    top:670px;
 }
 
 /*.fadeInOut {
@@ -327,6 +332,26 @@ h3 {
 
 .hide {
     visibility: hidden;
+}
+
+#explain-svg-1{
+    height:100px;
+    width:auto;
+    margin-top:-40px;
+}
+
+#explain-svg-2{
+    margin-top:40px;
+    height:100px;
+    width:auto;
+}
+
+#glitchImg{
+    opacity:0.5;
+    position: absolute;
+    top: 100px;
+    left: 175px;
+    filter:sepia(100%) hue-rotate(180deg) saturate(2) contrast(1);
 }
 
 .btn-next {

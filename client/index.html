@@ -12,6 +12,7 @@
             <div class="overlay"></div>
             <video id="video" class="fadeInOut hidden"></video>
             <canvas id="canvas" class="canvas-wrapper"></canvas>
+            <img id="glitchImg" class="hidden" width="550" height="731" />
         </div>
 
         <div id="canvas" class="countdown-wrapper fadeInOut hidden">
@@ -61,7 +62,8 @@
             </div>
 
             <div id="title-explain" style="color:red;">
-                ERKLÄRUNG ZUM BUTTON
+                <img src="assets/icon-click-crop.svg" id="explain-svg-1" /><br />
+                <img src="assets/icon-scroll-crop.svg" id="explain-svg-2" />
             </div>
             
         </div>
@@ -145,10 +147,11 @@
         <div id="state-04" class="hidden fadeInOut">
             <span class="title-state">05 Weitere Informationen</span>
             <div class="wrapper-title">
-                <span class="headline">Neugierig?</span>
+                <span class="headline">Welche Rolle spielen Algorithmen und Künstliche Intelligenz in unserem Alltag?</span>
                 <br><br>
                 <p>
-                    Hier stehen weitere Informationen.
+                    Sprechen Sie uns an oder besuchen Sie uns unter:<br />
+                    http://ki.technologiestiftung-berlin.de
                 </p>
             </div>
 
@@ -162,6 +165,7 @@
 
         <script src="./js/index.js"></script>
         <script src="./js/glitch.min.js"></script>
+        <script src="./js/d3.v5.min.js"></script>
         <script src="./js/d3.v5.min.js"></script>
     </body>
 </html>

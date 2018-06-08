@@ -122,6 +122,16 @@ function uploadcomplete(event){
     }else{
         console.log(dataTemp[0])
 
+        var imageData = document.getElementById('canvas').getContext('2d').getImageData( 0, 0, 550, 731 );
+
+        glitch({ seed: 25, quality: 60, iterations: 20, amount: 25 })
+            .fromImageData( imageData )
+            .toDataURL()
+            .then( function( dataURL ) {
+                document.getElementById('glitchImg').src = dataURL;
+                document.getElementById('glitchImg').classList.remove('hidden')
+            });
+
         let response = dataTemp[0].faceAttributes;
 
         toggleOverlay();
@@ -427,6 +437,8 @@ function updateState(){
             btnCancel.classList.add('hidden')
 
             //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.querySelector('.overlay').classList.remove('scanning');
+            document.getElementById('glitchImg').classList.add('hidden')
             document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
@@ -448,6 +460,8 @@ function updateState(){
             btnCancel.classList.remove('hidden')
 
             //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.querySelector('.overlay').classList.remove('scanning');
+            document.getElementById('glitchImg').classList.add('hidden')
             document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
@@ -467,6 +481,8 @@ function updateState(){
             btnCancel.classList.add('hidden')           
 
            //document.querySelector('.overlay.scanning').classList.add('hidden');
+           document.querySelector('.overlay').classList.remove('scanning');
+           document.getElementById('glitchImg').classList.add('hidden')
             document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
@@ -491,6 +507,8 @@ function updateState(){
             ajax.send();
 
             //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.querySelector('.overlay').classList.remove('scanning');
+            document.getElementById('glitchImg').classList.add('hidden')
             document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
@@ -504,13 +522,14 @@ function updateState(){
         break;
         case 4:
             console.log('4');
-            // createGlitch();
             togglePrintOverlay();
             clearAnalysis();
 
             pickRandomCard();
 
             document.getElementById('wrapper-error').classList.add('hidden');
+            document.querySelector('.overlay').classList.remove('scanning');
+            document.getElementById('glitchImg').classList.add('hidden')
             document.querySelector('.countdown-wrapper').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.querySelector('.canvas-wrapper').classList.add('hidden');
@@ -523,6 +542,7 @@ function updateState(){
 
             setTimeout(()=>{
                 config.blocked = false
+                config.activeButton = 1
 
                 btnNext.innerHTML = 'Neu starten';
                 btnNext.classList.remove('hidden')
@@ -553,7 +573,7 @@ function getRandomInt(max) {
 }
 
 function pickRandomCard() {
-    let randomInt = getRandomInt(7);
+    let randomInt = getRandomInt(6);
     let url = `./assets/postcards/0${randomInt}.png`;
     let img = document.querySelector('#postcard');
     img.src = url;
