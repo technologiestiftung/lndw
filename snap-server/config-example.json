@@ -3,5 +3,9 @@
 		"name":"",
 		"key1":"",
 		"key2":""
+	},
+	"arduino":{
+		"appPath":"/Applications/Arduino.app/Contents/MacOS",
+		"sketchPath":""
 	}
 }

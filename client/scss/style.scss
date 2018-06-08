@@ -258,6 +258,19 @@ h3 {
     transform: rotate(90deg) translateY(-83px) translateX(-29px) scale(1, -1);
 }
 
+.result-wrapper {
+    position: absolute;
+    top: 100px;
+    left: 174px;
+    width: 547px;
+    height: 729px;
+    border:1px solid red;
+    svg{
+        width: 547px;
+        height: 729px;
+    }
+}
+
 #canvas {
     position: absolute;
 }

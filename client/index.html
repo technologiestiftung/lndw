@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+    <head>
+        <meta charset="utf-8" />
+    </head>
     <body>
         <link rel="stylesheet" href="root.css">
         <div class="overlay-printing fadeInOut hidden" id="printing">
@@ -20,18 +22,22 @@
         </div>
 
         <div id="frame-wrapper" class="frame-wrapper fadeInOut hidden">
-                <img src="assets/frame.svg" alt="">
+            <img src="assets/frame.svg" alt="">
 
-                <span class="animate-flicker">
-                    Platzieren Sie ihr Gesicht 
-                    <br>
-                    in die Mitte des Rahmens.
-                </span>
-            </div>
+            <span class="animate-flicker">
+                Platzieren Sie ihr Gesicht 
+                <br>
+                in die Mitte des Rahmens.
+            </span>
+        </div>
+
+        <div id="result-wrapper" class="result-wrapper fadeInOut">
+            <svg width="550" height="731" viewBox="0 0 550 731" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
         
         <div class="side-block date" id="block-date"></div>
         <div class="side-block tag" id="block-date">#lndw18</div>
-        <div class="side-block lat" id="block-date">‎52° 31' 12.0288'' N</div>
+        <div class="side-block lat" id="block-date">52° 31' 12.0288'' N</div>
         <div class="side-block lng" id="block-date">13° 24' 17.8344'' E	</div>
         <img class="bar" src="assets/bar.png" alt="">
 
@@ -91,20 +97,28 @@
                         <span>Brille:</span>
                         <span class="response" id="p-glasses"></span>
                     </div>
-                </div>
-
-                <div>
                     <div class="param-wrapper">
                         <span>Haarfarbe:</span>
                         <span class="response" id="p-hair"></span>
                     </div>
                     <div class="param-wrapper">
-                        <span>Emotion:</span>
+                        <span>Makeup:</span>
+                        <span class="response" id="p-makeup"></span>
+                    </div>
+                    <div class="param-wrapper">
+                        <span>Gesichtsbehaarung:</span>
+                        <span class="response" id="p-fhair"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="param-wrapper">
+                        <span>Emotionen:</span>
                         <span class="response" id="p-emotion"></span>
                     </div>
                     <div class="param-wrapper">
-                        <span>Makeup:</span>
-                        <span class="response" id="p-makeup"></span>
+                        <span>Lächeln:</span>
+                        <span class="response" id="p-smile"></span>
                     </div>
                 </div>
 
@@ -131,5 +145,6 @@
 
         <script src="./js/index.js"></script>
         <script src="./js/glitch.min.js"></script>
+        <script src="./js/d3.v5.min.js"></script>
     </body>
 </html>

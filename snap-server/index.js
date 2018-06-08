@@ -57,6 +57,8 @@ const	sqlite = require('better-sqlite3'),
 		uuidv1 = require('uuid/v1'),
 		Jimp = require("jimp"),
 		getPixels = require("get-pixels")
+
+let stdout = execSync(`export PATH=$PATH:${config.arduino.appPath}`);
  
 let credentials = new CognitiveServicesCredentials(config.azure.key1),
 	client = new FaceAPIClient(credentials, config.azure.region);
@@ -96,7 +98,7 @@ app.get("/hello", (req, res)=>{
 
 app.get("/data", (req, res)=>{
 	let rows = db.prepare('SELECT * FROM face_metrics').all([])
-	res.status(500).json(rows)
+	res.status(200).json(rows)
 })
 
 app.get("/command/:cmd/:data", (req, res)=>{
@@ -107,13 +109,13 @@ app.get("/command/:cmd/:data", (req, res)=>{
     port.write(req.params.data)
     port.write('\n')
 
-	res.status(500).json({msg:'Command send.'})
+	res.status(200).json({msg:'Command send.'})
 })
 
 app.get("/print", (req, res)=>{
-	let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+	let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
 	let stdout1 = execSync('open -a "Google Chrome"');
-	res.status(500).json({"status":"printing"})
+	res.status(200).json({"status":"printing"})
 })
 
 app.post("/analyse", (req, res)=>{
@@ -184,6 +186,8 @@ function msProcess (filename, req, res){
 				if (err) throw err;
 
         		let img_border = json_result[0].faceRectangle.width*0.3
+
+        		//TODO Dynamic brightness factor depending on black/white ratio  
 
 				let buf = img.crop(json_result[0].faceRectangle.left-img_border, json_result[0].faceRectangle.top-img_border, json_result[0].faceRectangle.width+2*img_border, json_result[0].faceRectangle.height+2*img_border)
 					.scaleToFit(384,500)
@@ -259,7 +263,7 @@ function msProcess (filename, req, res){
 
 							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
 
-							let stdout = execSync(` arduino --upload /Users/enjoi/GitHub/tsb-lndw/snap-server/arduino/src/sketch/sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+							let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
 							let stdout1 = execSync('open -a "Google Chrome"');
 
 						 })

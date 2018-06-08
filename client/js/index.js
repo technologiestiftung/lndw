@@ -19,7 +19,6 @@ function takeSnapshot() {
     context.drawImage(video, 0, 0, vidWidth, vidHeight);
     let data = canvas.toDataURL();
 
-
     document.querySelector('.canvas-wrapper').style.opacity = 1;
     saveSnapshot(data);
     document.getElementById('analysis').style.opacity = 0;
@@ -41,11 +40,19 @@ function setTimer() {
             setTimer();
         }
         else if (countdown === 0) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "http://localhost:5971/command/allLightOn/1");
+            ajax.send();
             takeSnapshot();
             toggleOverlay();
             document.querySelector('.canvas-wrapper').classList.remove('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
             countdown = 4;
+            setTimeout(()=>{
+                var ajax = new XMLHttpRequest();
+                ajax.open("GET", "http://localhost:5971/command/allLightOff/1");
+                ajax.send();
+            },100)
         }
     },1000);
 }
@@ -81,6 +88,12 @@ function saveSnapshot(img){
     // ajax.open("POST", "https://tsb.ara.uberspace.de/lndw/analyse");
     ajax.open("POST", "http://localhost:5971/analyse");
     ajax.send(formdata);
+
+    // uploadcomplete({
+    //     target:{
+    //         response:JSON.stringify([{"faceId":"e3888539-b4c0-4a99-a079-6f18ba4e68bb","faceRectangle":{"top":293,"left":223,"width":326,"height":388},"faceLandmarks":{"pupilLeft":{"x":349.7,"y":388.6},"pupilRight":{"x":492.3,"y":395.1},"noseTip":{"x":407.6,"y":501},"mouthLeft":{"x":341.1,"y":579.1},"mouthRight":{"x":496.4,"y":591},"eyebrowLeftOuter":{"x":277.7,"y":356.7},"eyebrowLeftInner":{"x":399.9,"y":365},"eyeLeftOuter":{"x":321.3,"y":389.8},"eyeLeftTop":{"x":346.8,"y":378.8},"eyeLeftBottom":{"x":345.9,"y":397.1},"eyeLeftInner":{"x":371.8,"y":394},"eyebrowRightInner":{"x":440.4,"y":368.4},"eyebrowRightOuter":{"x":550.9,"y":378.5},"eyeRightInner":{"x":471.7,"y":397.6},"eyeRightTop":{"x":497.2,"y":383.2},"eyeRightBottom":{"x":494.1,"y":404.5},"eyeRightOuter":{"x":518.7,"y":400.8},"noseRootLeft":{"x":391.7,"y":404.1},"noseRootRight":{"x":441.1,"y":407.8},"noseLeftAlarTop":{"x":375.1,"y":467.6},"noseRightAlarTop":{"x":448.8,"y":473.8},"noseLeftAlarOutTip":{"x":353.5,"y":500.3},"noseRightAlarOutTip":{"x":467.5,"y":512.5},"upperLipTop":{"x":409,"y":580.4},"upperLipBottom":{"x":406.7,"y":593.8},"underLipTop":{"x":406.4,"y":600.5},"underLipBottom":{"x":404.4,"y":627.9}},"faceAttributes":{"smile":0,"headPose":{"pitch":0,"roll":3,"yaw":-5.5},"gender":"female","age":24,"facialHair":{"moustache":0,"beard":0,"sideburns":0},"glasses":"Sunglasses","emotion":{"anger":0,"contempt":0,"disgust":0,"fear":0,"happiness":0,"neutral":0.993,"sadness":0.007,"surprise":0},"exposure":{"exposureLevel":"overExposure","value":0.87},"noise":{"noiseLevel":"low","value":0},"makeup":{"eyeMakeup":true,"lipMakeup":true},"accessories":[{"type":"glasses","confidence":1}],"occlusion":{"foreheadOccluded":false,"eyeOccluded":false,"mouthOccluded":false},"hair":{"bald":0.2,"invisible":false,"hairColor":[{"color":"brown","confidence":0.94},{"color":"black","confidence":0.81},{"color":"blond","confidence":0.4},{"color":"other","confidence":0.25},{"color":"red","confidence":0.21},{"color":"gray","confidence":0.19}]}},"filename":"12a34050-6a65-11e8-9308-137020937741.png"}])
+    //     }
+    // })
 }
 
 function uploadcomplete(event){
@@ -88,69 +101,159 @@ function uploadcomplete(event){
     wrapperAnalysis.classList.remove('hidden');
     document.getElementById('analysis').style.opacity = 1;
     let dataTemp = JSON.parse(event.target.response)
-    let response = dataTemp[0].faceAttributes;
 
-    toggleOverlay();
-    togglePrintOverlay();
+    if('msg' in dataTemp && dataTemp.msg == "no face found"){
+        //TODO ERROR/SORRY MESSAGE
+    }else{
+        let response = dataTemp[0].faceAttributes;
 
-    // add css class here to canvas
-    document.getElementById('canvas').classList.add('scanning');
+        toggleOverlay();
+        togglePrintOverlay();
 
-    let emotions = {
-        'happiness': 'glücklich',
-        'surprise': 'überrascht',
-        'anger': 'wütend',
-        'contempt': 'missachtend',
-        'disguist': 'ekelnd',
-        'fear': 'ängstlich',
-        'neutral': 'neutral',
-        'sadness': 'traurig'
-    };
+        // add css class here to canvas
+        document.getElementById('canvas').classList.add('scanning');
 
-    let hairColors = {
-        'black': 'schwarz',
-        'brown': 'braun',
-        'blond': 'blond',
-        'other': 'andere',
-        'red': 'rot',
-        'gray': 'grau'
-    };
+        let emotions = {
+            'happiness': 'glücklich',
+            'surprise': 'überrascht',
+            'anger': 'wütend',
+            'contempt': 'missachtend',
+            'disguist': 'ekelnd',
+            'fear': 'ängstlich',
+            'neutral': 'neutral',
+            'sadness': 'traurig'
+        };
 
-    let gender = document.querySelector('#p-gender');
-    let age = document.querySelector('#p-age');
-    let emotion = document.querySelector('#p-emotion');
-    let glasses = document.querySelector('#p-glasses');
-    let hair = document.querySelector('#p-hair');
-    
-    gender.innerHTML = (response.gender == 'male') ? 'männlich': 'weiblich';
-    age.innerHTML = response.age + ' Jahre';
+        let hairColors = {
+            'black': 'schwarz',
+            'brown': 'braun',
+            'blond': 'blond',
+            'other': 'andere',
+            'red': 'rot',
+            'gray': 'grau'
+        };
 
-    
-    for (var property in response.emotion) {
-        if (response.emotion.hasOwnProperty(property)) {
-            let valueTempEmotion = response.emotion[property];
-            let stringTempEmotion = property;
-            valueEmotion = (response.emotion[property] > valueEmotion) ? response.emotion[property] : valueEmotion;
-            if (valueEmotion === valueTempEmotion) { 
-                emotionString = emotions[stringTempEmotion];
+        let gender = document.querySelector('#p-gender');
+        let age = document.querySelector('#p-age');
+        let emotion = document.querySelector('#p-emotion');
+        let glasses = document.querySelector('#p-glasses');
+        let makeup = document.querySelector('#p-makeup');
+        let hair = document.querySelector('#p-hair');
+        let fhair = document.querySelector('#p-fhair')
+        let smile = document.querySelector('#p-smile')
+        
+        gender.innerHTML = (response.gender == 'male') ? 'männlich': 'weiblich';
+        age.innerHTML = response.age + ' Jahre';
+
+        
+        var emotionString = ''
+        for (var property in response.emotion) {
+            if (response.emotion.hasOwnProperty(property)) {
+
+                let valueTempEmotion = response.emotion[property];
+                let stringTempEmotion = property;
+                if(emotionString != '')emotionString += '<br />'
+                emotionString += emotions[stringTempEmotion]+' ('+valueTempEmotion+')'
+                // valueEmotion = (response.emotion[property] > valueEmotion) ? response.emotion[property] : valueEmotion;
+                // if (valueEmotion === valueTempEmotion) { 
+                //     emotionString = emotions[stringTempEmotion];
+                // }
+
             }
         }
-    }
 
-    emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
-    
-    for (var property in response.hair.hairColor) {
-        let stringTempHair = response.hair.hairColor[property].color;
-        valueTempHair =  response.hair.hairColor[property].confidence;
-        valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
-        if (valueHair === valueTempHair) { 
-            for (var responseHairColor in hairColors) {
-                stringHair = hairColors[stringTempHair];
+        //emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
+        emotion.innerHTML = emotionString;
+        
+        for (var property in response.hair.hairColor) {
+            let stringTempHair = response.hair.hairColor[property].color;
+            valueTempHair =  response.hair.hairColor[property].confidence;
+            valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
+            if (valueHair === valueTempHair) { 
+                for (var responseHairColor in hairColors) {
+                    stringHair = hairColors[stringTempHair];
+                };
             };
-        };
+        }
+        hair.innerHTML = stringHair + ' (' + valueHair + ')';
+        if(response.hair.invisible == true){
+            hair.innerHTML = 'Unsichtbar';
+        }
+        if(response.hair.bald > 0.9){
+            hair.innerHTML = 'Glatze'
+        }
+        glasses.innerHTML = (response.glasses == 'ReadingGlasses') ? 'Ja' : 'Nein';
+
+        var makeupStr = ''
+        if(response.makeup.eyeMakeup) makeupStr += 'Augen'
+        if(response.makeup.eyeMakeup && response.makeup.lipMakeup) makeupStr += ', '
+        if(response.makeup.lipMakeup) makeupStr += 'Lippen'
+        makeup.innerHTML = makeupStr
+
+        var fhairStr = ''
+        if(response.facialHair.moustache > 0.5) fhairStr += 'Schnurrbart'
+        if(response.facialHair.beard > 0.5) fhairStr += ((response.facialHair.moustache > 0.5)?', ':'')+'Bart'
+        if(response.facialHair.sideburns > 0.5) fhairStr += ((response.facialHair.moustache > 0.5 || response.facialHair.beard)?', ':'')+'Koteletten'
+        fhair.innerHTML = fhairStr
+
+        var smileStr = 'Nein'
+        if(response.smile > 0.5) smileStr = 'Ja'
+        smile.innerHTML = smileStr
+
+        //TODO ???
+        // response.accessories
+
+        var faceNet = [
+            ['eyebrowLeftOuter', 'eyebrowLeftInner'],
+            ['eyebrowRightInner', 'eyebrowRightOuter'],
+            ['eyeLeftOuter', 'eyeLeftTop', 'eyeLeftInner', 'eyeLeftBottom', 'eyeLeftOuter'],
+            ['eyeRightOuter', 'eyeRightTop', 'eyeRightInner', 'eyeRightBottom', 'eyeRightOuter'],
+            ['noseRootLeft', 'noseRootRight', 'noseRightAlarTop', 'noseRightAlarOutTip', 'noseTip', 'noseLeftAlarOutTip', 'noseLeftAlarTop', 'noseRootLeft'],
+            ['mouthLeft', 'upperLipTop', 'mouthRight', 'underLipBottom', 'mouthLeft'],
+            ['mouthLeft', 'upperLipBottom', 'mouthRight'],
+            ['mouthLeft', 'underLipTop', 'mouthRight']
+        ]
+
+        var svg = d3.select('#result-wrapper svg')
+            svg.selectAll('*').remove()
+
+        for(var key in dataTemp[0].faceLandmarks){
+            var l = dataTemp[0].faceLandmarks[key]
+            svg.append('circle')
+                .attr('r',3)
+                .style('fill','#46E0B4')
+                .attr('cx',l.x)
+                .attr('cy',l.y)
+        }
+
+        var line = d3.line()
+            .x(d=>d[0])
+            .y(d=>d[1])
+
+        faceNet.forEach(n=>{
+            let p = []
+            n.forEach(v=>{
+                p.push([
+                    dataTemp[0].faceLandmarks[v].x,
+                    dataTemp[0].faceLandmarks[v].y
+                ])
+            })
+            svg.append('path')
+                .data([p])
+                .style('fill','transparent')
+                .style('stroke','#46E0B4')
+                .attr('d', line)
+        })
+
+        svg.append('rect')
+            .style('fill','transparent')
+            .style('stroke','#46E0B4')
+            .attr('x',dataTemp[0].faceRectangle.left)
+            .attr('y',dataTemp[0].faceRectangle.top)
+            .attr('width',dataTemp[0].faceRectangle.width)
+            .attr('height',dataTemp[0].faceRectangle.height)
+
     }
-    hair.innerHTML = stringHair + ' (' + valueHair + ')';
-    glasses.innerHTML = (response.glasses == 'ReadingGlasses') ? 'Ja' : 'Nein';
 }
 
 function createGlitch() {
@@ -239,6 +342,9 @@ btnNext.addEventListener('click', () => {
         btnCancel.innerHTML = 'Abbrechen';
         document.getElementById('frame-wrapper').classList.remove('hidden');
     } else if (config.state == 3) {
+        var ajax = new XMLHttpRequest();
+        ajax.open("GET", "http://localhost:5971/command/blinkOn/1");
+        ajax.send();
         setTimer();
         btnNext.innerHTML = 'Weiter';  
         document.getElementById('analysis').style.opacity = 0;

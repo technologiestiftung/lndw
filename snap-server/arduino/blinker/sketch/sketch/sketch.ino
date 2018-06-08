@@ -49,26 +49,24 @@ void loop() {
       Serial.println(command);
       Serial.println(textstr);
 
-      if(command == "lightOn"){
-        //This is currently not working
-        strip.setPixelColor(textstr.toInt(), 255 ,255 , 255);
-      }else if(command == "lightOff"){
-        //This is currently not working
-        strip.setPixelColor(textstr.toInt(), 0, 0, 0);
-      }else if(command == "blinkOn"){
+      
+      if(command == "blinkOn"){
         blinking = true; blink_state = true;
       }else if(command == "blinkOff"){
         blinking = false;
+        blink_state = false;
         default_r = 0;
         default_g = 0;
         default_b = 0;
-      }else if(command == "allOn"){
+      }else if(command == "allLightOn"){
         blinking = false;
+        blink_state = false;
         default_r = 255;
         default_g = 255;
         default_b = 255;
-      }else if(command == "allOff"){
+      }else if(command == "allLightOff"){
         blinking = false;
+        blink_state = false;
         default_r = 0;
         default_g = 0;
         default_b = 0;
