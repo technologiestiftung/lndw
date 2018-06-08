@@ -105,6 +105,8 @@ function uploadcomplete(event){
     if('msg' in dataTemp && dataTemp.msg == "no face found"){
         //TODO ERROR/SORRY MESSAGE
     }else{
+        console.log(dataTemp[0])
+
         let response = dataTemp[0].faceAttributes;
 
         toggleOverlay();
@@ -152,8 +154,13 @@ function uploadcomplete(event){
 
                 let valueTempEmotion = response.emotion[property];
                 let stringTempEmotion = property;
-                if(emotionString != '')emotionString += '<br />'
-                emotionString += emotions[stringTempEmotion]+' ('+valueTempEmotion+')'
+                if(parseFloat(valueTempEmotion) > 0){
+                    if(emotionString != '')emotionString += '<br />'
+                    if(!(stringTempEmotion in emotions)){
+                        emotionString += stringTempEmotion
+                    }
+                    emotionString += emotions[stringTempEmotion]+' ('+valueTempEmotion+')'
+                }
                 // valueEmotion = (response.emotion[property] > valueEmotion) ? response.emotion[property] : valueEmotion;
                 // if (valueEmotion === valueTempEmotion) { 
                 //     emotionString = emotions[stringTempEmotion];
@@ -177,24 +184,34 @@ function uploadcomplete(event){
         }
         hair.innerHTML = stringHair + ' (' + valueHair + ')';
         if(response.hair.invisible == true){
-            hair.innerHTML = 'Unsichtbar';
+            hair.innerHTML = 'Nicht sichtbar';
         }
         if(response.hair.bald > 0.9){
             hair.innerHTML = 'Glatze'
         }
-        glasses.innerHTML = (response.glasses == 'ReadingGlasses') ? 'Ja' : 'Nein';
+        glasses.innerHTML = (response.glasses == "NoGlasses") ? 'Nein' : 'Ja';
 
         var makeupStr = ''
         if(response.makeup.eyeMakeup) makeupStr += 'Augen'
         if(response.makeup.eyeMakeup && response.makeup.lipMakeup) makeupStr += ', '
         if(response.makeup.lipMakeup) makeupStr += 'Lippen'
         makeup.innerHTML = makeupStr
+        if(makeupStr == ''){
+            makeup.parentNode.classList.add('hidden')
+        }else{
+            makeup.parentNode.classList.remove('hidden')
+        }
 
         var fhairStr = ''
         if(response.facialHair.moustache > 0.5) fhairStr += 'Schnurrbart'
         if(response.facialHair.beard > 0.5) fhairStr += ((response.facialHair.moustache > 0.5)?', ':'')+'Bart'
         if(response.facialHair.sideburns > 0.5) fhairStr += ((response.facialHair.moustache > 0.5 || response.facialHair.beard)?', ':'')+'Koteletten'
         fhair.innerHTML = fhairStr
+        if(fhairStr == ''){
+            fhair.parentNode.classList.add('hidden')
+        }else{
+            fhair.parentNode.classList.remove('hidden')
+        }
 
         var smileStr = 'Nein'
         if(response.smile > 0.5) smileStr = 'Ja'

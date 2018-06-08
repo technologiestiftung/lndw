@@ -20,25 +20,28 @@ SerialPort.list().then(list=>{
 		}
 	})
 
-  	port = new SerialPort(arduinos.other.comName, {
-	   baudRate: 9600
-	})
+	if(arduinos.other != null){
 
-	port.on('error', function(err) {
-	  console.log('Error: ', err.message)
-	})
+	  	port = new SerialPort(arduinos.other.comName, {
+		   baudRate: 9600
+		})
 
-	port.on('data', function(data){
-	  message += data.toString('utf8')
-	  if(message.indexOf('\n')>=0){
-	    console.log('MSG:', message)
-	    message = ''
-	  }
-	})
+		port.on('error', function(err) {
+		  console.log('Error: ', err.message)
+		})
 
-	port.on('open', function(){
-	  console.log('Serial Port Opend')
-	})
+		port.on('data', function(data){
+		  message += data.toString('utf8')
+		  if(message.indexOf('\n')>=0){
+		    console.log('MSG:', message)
+		    message = ''
+		  }
+		})
+
+		port.on('open', function(){
+		  console.log('Serial Port Opend')
+		})
+	}
 
 }).catch(err=>{
   throw err
@@ -59,6 +62,7 @@ const	sqlite = require('better-sqlite3'),
 		getPixels = require("get-pixels")
 
 let stdout = execSync(`export PATH=$PATH:${config.arduino.appPath}`);
+console.log(config.arduino.appPath)
  
 let credentials = new CognitiveServicesCredentials(config.azure.key1),
 	client = new FaceAPIClient(credentials, config.azure.region);
@@ -110,12 +114,6 @@ app.get("/command/:cmd/:data", (req, res)=>{
     port.write('\n')
 
 	res.status(200).json({msg:'Command send.'})
-})
-
-app.get("/print", (req, res)=>{
-	let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
-	let stdout1 = execSync('open -a "Google Chrome"');
-	res.status(200).json({"status":"printing"})
 })
 
 app.post("/analyse", (req, res)=>{
@@ -258,12 +256,91 @@ function msProcess (filename, req, res){
 						    }
 
 						    template = template.replace('||PROFILE||', byteStr)
-							template = template.replace('||AGE||', json_result[0].faceAttributes.age)
-							template = template.replace('||GENDER||', json_result[0].faceAttributes.gender) //TRANSLATE!!!!!!
 
+						    let metadata_str = '',
+						    	emotions = {
+						            'happiness': 'glücklich',
+						            'surprise': 'überrascht',
+						            'anger': 'wütend',
+						            'contempt': 'missachtend',
+						            'disguist': 'ekelnd',
+						            'fear': 'ängstlich',
+						            'neutral': 'neutral',
+						            'sadness': 'traurig'
+						        },
+						        hairColors = {
+						            'black': 'schwarz',
+						            'brown': 'braun',
+						            'blond': 'blond',
+						            'other': 'andere',
+						            'red': 'rot',
+						            'gray': 'grau'
+						        }
+
+						    metadata_str += 'printer.println(F("ALT3R: '+json_result[0].faceAttributes.age+' Jahre"));';
+
+						    let gender_translate = {"male":"männlich", "female":"weiblich"}
+						    metadata_str += 'printer.println(F("S3X: '+gender_translate[json_result[0].faceAttributes.gender]+'"));';
+							
+							metadata_str += 'printer.println(F("ALT3R: '+json_result[0].faceAttributes.age+'"));';
+
+							metadata_str += 'printer.println(F("EM0T10NEN:"));';
+							
+							for(let property in json_result[0].faceAttributes.emotion){
+								let val = parseFloat(json_result[0].faceAttributes.emotion[property])
+								if(val > 0){
+									metadata_str += 'printer.println(F("'+emotions[property]+' ('+val+')"));';
+								}
+							}
+        
+							let valueTempHair = 0, valueHair = 0
+
+					        for (var property in json_result[0].faceAttributes.hair.hairColor) {
+					            let stringTempHair = json_result[0].faceAttributes.hair.hairColor[property].color;
+					            valueTempHair =  json_result[0].faceAttributes.hair.hairColor[property].confidence;
+					            valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
+					            if (valueHair === valueTempHair) { 
+					                for (var responseHairColor in hairColors) {
+					                    stringHair = hairColors[stringTempHair];
+					                };
+					            };
+					        }
+
+					        if(json_result[0].faceAttributes.hair.invisible == true){
+					            metadata_str += 'printer.println(F("Haare: Nicht sichtbar"));';
+					        }else if(json_result[0].faceAttributes.hair.bald > 0.9){
+					            metadata_str += 'printer.println(F("Haare: Glatze"));';
+					        }else {
+					        	metadata_str += 'printer.println(F("Haare: '+stringHair + ' (' + valueHair + ')"));';
+					        }
+
+					        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
+
+					        var makeupStr = ''
+					        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'
+					        if(json_result[0].faceAttributes.makeup.eyeMakeup && json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += ', '
+					        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'Lippen'
+					        if(makeupStr != ''){
+					            metadata_str += 'printer.println(F("Makeup: '+makeupStr + '"));';
+					        }
+
+					        var fhairStr = ''
+					        if(json_result[0].faceAttributes.facialHair.moustache > 0.5) fhairStr += 'Schnurrbart'
+					        if(json_result[0].faceAttributes.facialHair.beard > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5)?', ':'')+'Bart'
+					        if(json_result[0].faceAttributes.facialHair.sideburns > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5 || json_result[0].faceAttributes.facialHair.beard)?', ':'')+'Koteletten'
+					        if(fhairStr != ''){
+					        	metadata_str += 'printer.println(F("Gesichtsbehaarung: ' + fhairStr + '"));';
+					        }
+
+        					var smileStr = 'Nein'
+        					if(json_result[0].faceAttributes.smile > 0.5) smileStr = 'Ja'
+        					metadata_str += 'printer.println(F("Lächeln: ' + smileStr + '"));';
+
+						    template = template.replace('||METADATA||', metadata_str)
+							
 							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
 
-							let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+							//let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
 							let stdout1 = execSync('open -a "Google Chrome"');
 
 						 })

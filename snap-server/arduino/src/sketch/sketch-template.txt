@@ -26,8 +26,12 @@ void setup() {
   printer.printBitmap(384, 384, data_profile);
 
 	printer.println(F(" "));
-	printer.println(F("ALT3R: ||AGE||"));
-	printer.println(F("S3X: ||GENDER||"));
+
+	||METADATA||
+
+	printer.println(F(" "));
+	printer.println(F("Mehr erfahren unter:"));
+	printer.println(F("ki.technologiestiftung-berlin.de"));
 
 	printer.feed(2);
 
