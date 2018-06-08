@@ -214,6 +214,25 @@ h3 {
     font-size: 10rem;
 }
 
+.wrapper-error{
+    color: #F8FDFF;
+    position: absolute;
+    opacity: 0.9;
+    left: 170px;
+    top: 850px;
+
+    font-size:16px;
+
+    background: $color-bg-highlighted;
+    width: 65vw;
+
+    p {
+        text-transform: uppercase;
+        line-height: 150%;
+        letter-spacing: .5px;
+    }   
+}
+
 .frame-wrapper {
     position: absolute;
     top: 98px;

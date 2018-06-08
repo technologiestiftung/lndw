@@ -264,6 +264,7 @@ function msProcess (filename, req, res){
 						            'anger': 'wuetend',
 						            'contempt': 'missachtend',
 						            'disguist': 'ekelnd',
+						            'disgust': 'ekelnd',
 						            'fear': 'aengstlich',
 						            'neutral': 'neutral',
 						            'sadness': 'traurig'
@@ -312,7 +313,7 @@ function msProcess (filename, req, res){
 					        	metadata_str += 'printer.println(F("Haare: '+stringHair + ' (' + valueHair + ')"));';
 					        }
 
-					        metadata_str += 'printer.println(F("Bri||e: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
+					        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
 
 					        var makeupStr = ''
 					        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'

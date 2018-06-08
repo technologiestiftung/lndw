@@ -107,6 +107,18 @@ function uploadcomplete(event){
 
     if('msg' in dataTemp && dataTemp.msg == "no face found"){
         //TODO ERROR/SORRY MESSAGE
+
+        config.blocked = false
+
+        btnNext.innerHTML = 'Neu starten';
+        btnNext.classList.remove('hidden')
+
+        config.activeButton = 1
+        document.getElementById('analysis').style.opacity = 0;
+
+        document.getElementById('wrapper-error').classList.remove('hidden');
+
+
     }else{
         console.log(dataTemp[0])
 
@@ -124,6 +136,7 @@ function uploadcomplete(event){
             'anger': 'wütend',
             'contempt': 'missachtend',
             'disguist': 'ekelnd',
+            'disgust': 'ekelnd',
             'fear': 'ängstlich',
             'neutral': 'neutral',
             'sadness': 'traurig'
@@ -278,7 +291,7 @@ function uploadcomplete(event){
         setTimeout(()=>{
             config.state += 1;
             updateState()
-        }, 60000)
+        }, 30000)
 
     }
 }
@@ -342,6 +355,7 @@ btnCancel.addEventListener('click', () => {
     document.querySelector('#cancel').classList.add('hidden');
     document.querySelector('#next').classList.remove('hidden');
     document.getElementById('frame-wrapper').classList.add('hidden');
+    document.getElementById('wrapper-error').classList.add('hidden');
     document.querySelector('.canvas-wrapper').classList.add('hidden');
     document.querySelector('.countdown-wrapper').classList.add('hidden');
 });
@@ -364,8 +378,10 @@ window.addEventListener('keypress', (event) => {
             updateButton()
         }
     }else if (keyName == 'r') {
-        config.activeButton = 0
-        updateButton()
+        if(config.maxButtons>1){
+            config.activeButton = 0
+            updateButton()
+        }
     }
 
     console.log(keyName, config.activeButton)
@@ -410,6 +426,8 @@ function updateState(){
 
             btnCancel.classList.add('hidden')
 
+            //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
@@ -429,6 +447,8 @@ function updateState(){
             btnCancel.innerHTML = 'Neu starten';
             btnCancel.classList.remove('hidden')
 
+            //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
@@ -446,6 +466,8 @@ function updateState(){
 
             btnCancel.classList.add('hidden')           
 
+           //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
             document.querySelector('.canvas-wrapper').classList.add('hidden');
@@ -468,7 +490,8 @@ function updateState(){
             ajax.open("GET", "http://localhost:5971/command/blinkOn/1");
             ajax.send();
 
-            setTimer();
+            //document.querySelector('.overlay.scanning').classList.add('hidden');
+            document.getElementById('wrapper-error').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.remove('hidden');
@@ -476,6 +499,8 @@ function updateState(){
             document.getElementById('analysis').style.opacity = 0;
 
             video.classList.remove('hidden');
+
+            setTimer();
         break;
         case 4:
             console.log('4')
@@ -483,13 +508,14 @@ function updateState(){
             togglePrintOverlay();
             clearAnalysis();
 
+            document.getElementById('wrapper-error').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
             document.getElementById('frame-wrapper').classList.add('hidden');
             document.querySelector('.canvas-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.getElementById('analysis').style.opacity = 0;
             video.classList.add('hidden');
-            
+
             valueHair = 0;
             valueEmotion = 0;
 
@@ -498,7 +524,7 @@ function updateState(){
 
                 btnNext.innerHTML = 'Neu starten';
                 btnNext.classList.remove('hidden')
-            }, 60000)
+            }, 30000)
         break;
     }
 
