@@ -112,11 +112,19 @@ a:hover{
 
 </head>
 <body>
-  
+  <div id="fb-root"></div>
+<!-- <script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script> -->
+
 
 
 	<div id="container">
-	  <canvas class="overlay" id="canvas" style ="background:black; position:absolute;top:0;left:0;z-index:0; width:100%; height:100%; filter:sepia(100%) hue-rotate(180deg) saturate(2) contrast(2)">
+	  <canvas class="overlay" id="canvas" style ="background:black; position:absolute;top:0;left:0;z-index:0; width:100%; height:100%;">
       Sorry but you're browser doesn't support the canvas :(
     </canvas>
   </div>
@@ -522,21 +530,6 @@ function onDocumentMouseDown(event) {
     else{
       alert('Your browser does not support getUserMedia. Try Chrome or Firefox instead')
     }
-
-	navigator.mediaDevices.enumerateDevices().then(devices => {
-        // console.log(devices);
-        var camera = devices.filter(device => device.kind == "videoinput");
-        camera.forEach(device => {
-            	if(window.location.href.indexOf('1')>-1 && device.deviceId == "0d71293679c92ee4cfcad2d6e0951bb620381fde52ebfa20ce7b9e2e532d6988") { id = device.deviceId;};
-		if(window.location.href.indexOf('2')>-1 && device.deviceId == "04d3b488dd37940439ca7554d02c5f89bece9dc030a2852c9b1169fe6a1df643") { id = device.deviceId;};
-        })
-        var constraints = { deviceId: { exact: id } };
-        return navigator.mediaDevices.getUserMedia({ video: constraints });
-    })
-    .then(stream => {
-        handleVideo(stream)
-    });
-
     function handleVideo(stream) {
       var url = window.URL || window.webkitURL;
        video.src = url ? url.createObjectURL(stream) : stream;
