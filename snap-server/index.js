@@ -259,12 +259,12 @@ function msProcess (filename, req, res){
 
 						    let metadata_str = '',
 						    	emotions = {
-						            'happiness': 'glücklich',
-						            'surprise': 'überrascht',
-						            'anger': 'wütend',
+						            'happiness': 'gluecklich',
+						            'surprise': 'ueberrascht',
+						            'anger': 'wuetend',
 						            'contempt': 'missachtend',
 						            'disguist': 'ekelnd',
-						            'fear': 'ängstlich',
+						            'fear': 'aengstlich',
 						            'neutral': 'neutral',
 						            'sadness': 'traurig'
 						        },
@@ -279,11 +279,9 @@ function msProcess (filename, req, res){
 
 						    metadata_str += 'printer.println(F("ALT3R: '+json_result[0].faceAttributes.age+' Jahre"));';
 
-						    let gender_translate = {"male":"männlich", "female":"weiblich"}
-						    metadata_str += 'printer.println(F("S3X: '+gender_translate[json_result[0].faceAttributes.gender]+'"));';
+						    let gender_translate = {"male":"maennlich", "female":"weiblich"}
+						    metadata_str += 'printer.println(F("Geschlecht: '+gender_translate[json_result[0].faceAttributes.gender]+'"));';
 							
-							metadata_str += 'printer.println(F("ALT3R: '+json_result[0].faceAttributes.age+'"));';
-
 							metadata_str += 'printer.println(F("EM0T10NEN:"));';
 							
 							for(let property in json_result[0].faceAttributes.emotion){
@@ -293,7 +291,7 @@ function msProcess (filename, req, res){
 								}
 							}
         
-							let valueTempHair = 0, valueHair = 0
+							let valueTempHair = 0, valueHair = 0, stringHair = ''
 
 					        for (var property in json_result[0].faceAttributes.hair.hairColor) {
 					            let stringTempHair = json_result[0].faceAttributes.hair.hairColor[property].color;
@@ -314,12 +312,12 @@ function msProcess (filename, req, res){
 					        	metadata_str += 'printer.println(F("Haare: '+stringHair + ' (' + valueHair + ')"));';
 					        }
 
-					        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
+					        metadata_str += 'printer.println(F("Bri||e: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
 
 					        var makeupStr = ''
 					        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'
 					        if(json_result[0].faceAttributes.makeup.eyeMakeup && json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += ', '
-					        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'Lippen'
+					        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'L1ppen'
 					        if(makeupStr != ''){
 					            metadata_str += 'printer.println(F("Makeup: '+makeupStr + '"));';
 					        }
@@ -329,18 +327,18 @@ function msProcess (filename, req, res){
 					        if(json_result[0].faceAttributes.facialHair.beard > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5)?', ':'')+'Bart'
 					        if(json_result[0].faceAttributes.facialHair.sideburns > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5 || json_result[0].faceAttributes.facialHair.beard)?', ':'')+'Koteletten'
 					        if(fhairStr != ''){
-					        	metadata_str += 'printer.println(F("Gesichtsbehaarung: ' + fhairStr + '"));';
+					        	metadata_str += 'printer.println(F("Ges1chtsbehaarung: ' + fhairStr + '"));';
 					        }
 
         					var smileStr = 'Nein'
         					if(json_result[0].faceAttributes.smile > 0.5) smileStr = 'Ja'
-        					metadata_str += 'printer.println(F("Lächeln: ' + smileStr + '"));';
+        					metadata_str += 'printer.println(F("Laecheln: ' + smileStr + '"));';
 
 						    template = template.replace('||METADATA||', metadata_str)
 							
 							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
 
-							//let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
+							let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
 							let stdout1 = execSync('open -a "Google Chrome"');
 
 						 })

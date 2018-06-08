@@ -66,17 +66,17 @@ h3 {
     line-height: 150%;
     letter-spacing: .5px; }
 
-.fadeInOut {
-  transition-duration: 0.5s;
-  transition-property: opacity, visibility;
-  transition-delay: 1s; }
-
+/*.fadeInOut {
+    transition-duration: 0.5s;
+    transition-property: opacity, visibility;
+    transition-delay: 1s;
+}*/
 .hidden {
   visibility: hidden;
   opacity: 0;
-  transition-duration: 0.5s;
-  transition-property: opacity, visibility;
-  transition-delay: 0s; }
+  /*transition-duration: 0.5s;
+    transition-property: opacity, visibility;
+    transition-delay: 0s;*/ }
 
 .param-wrapper {
   display: flex;
@@ -109,9 +109,22 @@ h3 {
   text-transform: uppercase;
   letter-spacing: 1px; }
 
+#title-explain {
+  position: absolute;
+  left: 180px;
+  top: 800px;
+  color: red; }
+
+#state-01 ul,
+#state-01 li {
+  list-style: square outside;
+  padding-bottom: 15px;
+  line-height: 1.5em;
+  font-size: 18px; }
+
 .btn-group {
   position: absolute;
-  width: 400px;
+  width: 700px;
   bottom: 50px; }
 
 .line {
@@ -223,13 +236,18 @@ h3 {
     left: 70px;
     top: 90px; }
   .frame-wrapper span {
-    color: #002448;
+    color: #F8FDFF;
     position: absolute;
-    width: 200px;
     opacity: 0.9;
-    left: 300px;
-    top: 450px;
-    background: #96CBDB; }
+    left: -20px;
+    top: 750px;
+    font-size: 16px;
+    background: #002448;
+    width: 65vw; }
+    .frame-wrapper span p {
+      text-transform: uppercase;
+      line-height: 150%;
+      letter-spacing: .5px; }
 
 .side-block {
   background: #002448;
@@ -299,27 +317,27 @@ h3 {
 
 @keyframes noise-anim {
   0% {
-    clip: rect(15px, 9999px, 49px, 0); }
+    clip: rect(40px, 9999px, 30px, 0); }
   10% {
-    clip: rect(41px, 9999px, 33px, 0); }
+    clip: rect(8px, 9999px, 79px, 0); }
   20% {
-    clip: rect(72px, 9999px, 81px, 0); }
+    clip: rect(77px, 9999px, 15px, 0); }
   30% {
-    clip: rect(62px, 9999px, 83px, 0); }
+    clip: rect(26px, 9999px, 27px, 0); }
   40% {
-    clip: rect(54px, 9999px, 73px, 0); }
+    clip: rect(67px, 9999px, 87px, 0); }
   50% {
-    clip: rect(70px, 9999px, 33px, 0); }
+    clip: rect(89px, 9999px, 59px, 0); }
   60% {
-    clip: rect(69px, 9999px, 10px, 0); }
+    clip: rect(20px, 9999px, 57px, 0); }
   70% {
-    clip: rect(31px, 9999px, 3px, 0); }
+    clip: rect(76px, 9999px, 84px, 0); }
   80% {
-    clip: rect(2px, 9999px, 62px, 0); }
+    clip: rect(76px, 9999px, 81px, 0); }
   90% {
-    clip: rect(89px, 9999px, 12px, 0); }
+    clip: rect(51px, 9999px, 62px, 0); }
   100% {
-    clip: rect(78px, 9999px, 51px, 0); } }
+    clip: rect(19px, 9999px, 91px, 0); } }
 
 .glitch:after {
   content: attr(data-text);
@@ -335,47 +353,47 @@ h3 {
 
 @keyframes noise-anim-2 {
   0% {
-    clip: rect(93px, 9999px, 32px, 0); }
+    clip: rect(100px, 9999px, 2px, 0); }
   5% {
-    clip: rect(43px, 9999px, 100px, 0); }
+    clip: rect(21px, 9999px, 48px, 0); }
   10% {
-    clip: rect(54px, 9999px, 95px, 0); }
+    clip: rect(100px, 9999px, 17px, 0); }
   15% {
-    clip: rect(18px, 9999px, 7px, 0); }
+    clip: rect(99px, 9999px, 38px, 0); }
   20% {
-    clip: rect(55px, 9999px, 63px, 0); }
+    clip: rect(68px, 9999px, 10px, 0); }
   25% {
-    clip: rect(83px, 9999px, 25px, 0); }
+    clip: rect(82px, 9999px, 44px, 0); }
   30% {
-    clip: rect(75px, 9999px, 8px, 0); }
+    clip: rect(59px, 9999px, 32px, 0); }
   35% {
-    clip: rect(77px, 9999px, 84px, 0); }
+    clip: rect(17px, 9999px, 6px, 0); }
   40% {
-    clip: rect(3px, 9999px, 64px, 0); }
+    clip: rect(94px, 9999px, 43px, 0); }
   45% {
-    clip: rect(39px, 9999px, 70px, 0); }
+    clip: rect(55px, 9999px, 74px, 0); }
   50% {
-    clip: rect(89px, 9999px, 34px, 0); }
+    clip: rect(20px, 9999px, 25px, 0); }
   55% {
-    clip: rect(20px, 9999px, 14px, 0); }
+    clip: rect(63px, 9999px, 88px, 0); }
   60% {
-    clip: rect(46px, 9999px, 43px, 0); }
+    clip: rect(40px, 9999px, 92px, 0); }
   65% {
-    clip: rect(69px, 9999px, 94px, 0); }
+    clip: rect(45px, 9999px, 86px, 0); }
   70% {
-    clip: rect(61px, 9999px, 57px, 0); }
+    clip: rect(49px, 9999px, 62px, 0); }
   75% {
-    clip: rect(86px, 9999px, 77px, 0); }
+    clip: rect(26px, 9999px, 3px, 0); }
   80% {
-    clip: rect(83px, 9999px, 36px, 0); }
+    clip: rect(91px, 9999px, 20px, 0); }
   85% {
-    clip: rect(41px, 9999px, 41px, 0); }
+    clip: rect(37px, 9999px, 34px, 0); }
   90% {
-    clip: rect(76px, 9999px, 48px, 0); }
+    clip: rect(36px, 9999px, 7px, 0); }
   95% {
-    clip: rect(15px, 9999px, 6px, 0); }
+    clip: rect(26px, 9999px, 87px, 0); }
   100% {
-    clip: rect(22px, 9999px, 45px, 0); } }
+    clip: rect(9px, 9999px, 50px, 0); } }
 
 .glitch:before {
   content: attr(data-text);
@@ -421,12 +439,12 @@ h3 {
   100% {
     opacity: 1; } }
 
-.animate-flicker {
-  -webkit-animation: flickerAnimation 1s infinite;
-  -moz-animation: flickerAnimation 1s infinite;
-  -o-animation: flickerAnimation 1s infinite;
-  animation: flickerAnimation 1s infinite; }
-
+/*.animate-flicker {
+    -webkit-animation: flickerAnimation 1s infinite;
+    -moz-animation: flickerAnimation 1s infinite;
+    -o-animation: flickerAnimation 1s infinite;
+    animation: flickerAnimation 1s infinite;
+    }*/
 .overlay {
   width: 10px;
   position: absolute;

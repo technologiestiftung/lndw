@@ -139,12 +139,19 @@ size_t Pos_Printer::write(uint8_t c) {
   if(c != 0x13) { // Strip carriage returns
   #ifdef DENMARK
 	if(c == 0xC3){c = 0x00;} // 
-	if(c == 0xA5){c = '}';}  // Danish å
+	if(c == 0xA5){c = '}';}  // Danish Å
 	if(c == 0xB8){c = '|';}  // Danish ø
 	if(c == 0xA6){c = '{';}  // Danish æ
 	if(c == 0x85){c = ']';}  // Danish Å
 	if(c == 0x98){c = '\\';}  // Danish Ø
 	if(c == 0x86){c = '[';}  // Danish Æ
+  // if(c == 'Ä'){ c = 0x8E;}
+  // if(c == 'ä'){ c = 0x84;}
+  // if(c == 'Ö'){ c = 0x99;}
+  // if(c == 'ö'){ c = 0x94;}
+  // if(c == 'Ü'){ c = 0x9A;}
+  // if(c == 'ü'){ c = 0x81;}
+  // if(c == 'ß'){ c = 0xE1;}
   #endif // end ifdef DENMARK
 	  
     timeoutWait();

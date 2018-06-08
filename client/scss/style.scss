@@ -27,18 +27,18 @@ h3 {
     }
 }
 
-.fadeInOut {
+/*.fadeInOut {
     transition-duration: 0.5s;
     transition-property: opacity, visibility;
     transition-delay: 1s;
-}
+}*/
 
 .hidden {
     visibility: hidden;
     opacity: 0;
-    transition-duration: 0.5s;
+    /*transition-duration: 0.5s;
     transition-property: opacity, visibility;
-    transition-delay: 0s;
+    transition-delay: 0s;*/
 }
 
 .param-wrapper {
@@ -80,9 +80,24 @@ h3 {
     letter-spacing: 1px;
 }
 
+#title-explain {
+    position:absolute;
+    left:180px;
+    top:800px;
+    color:red;
+}
+
+#state-01 ul,
+#state-01 li{
+    list-style:square outside;
+    padding-bottom:15px;
+    line-height:1.5em;
+    font-size:18px;
+}
+
 .btn-group {
     position: absolute;
-    width: 400px;
+    width: 700px;
     bottom: 50px;
 }
 
@@ -215,13 +230,22 @@ h3 {
     }
 
     span {
-        color: $color-bg-highlighted;
+        color: #F8FDFF;
         position: absolute;
-        width: 200px;
         opacity: 0.9;
-        left: 300px;
-        top: 450px;
-        background: $color-primary-unselected;
+        left: -20px;
+        top: 750px;
+
+        font-size:16px;
+
+        background: $color-bg-highlighted;
+        width: 65vw;
+
+        p {
+            text-transform: uppercase;
+            line-height: 150%;
+            letter-spacing: .5px;
+        }
         
     }
 }
@@ -372,12 +396,12 @@ h3 {
     50%  { opacity:0; }
     100% { opacity:1; }
   }
-  .animate-flicker {
+  /*.animate-flicker {
     -webkit-animation: flickerAnimation 1s infinite;
     -moz-animation: flickerAnimation 1s infinite;
     -o-animation: flickerAnimation 1s infinite;
     animation: flickerAnimation 1s infinite;
-    }
+    }*/
 
 .overlay {
     width: 10px;

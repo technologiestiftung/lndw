@@ -25,6 +25,7 @@ void setup() {
   printer.printBitmap(384, 231, data_header);
   printer.printBitmap(384, 384, data_profile);
 
+  	printer.feed(2);
 	printer.println(F(" "));
 
 	||METADATA||

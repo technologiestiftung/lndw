@@ -4,7 +4,10 @@ var title, info, prompt, video, container, devices, id, config, canvas, context;
 var blockDate, btnNext, countdown = 4, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
 
 config = {
+    blocked:false,
     state: 0,
+    activeButton:0,
+    maxButtons:1
 };
 
 function takeSnapshot() {
@@ -270,6 +273,13 @@ function uploadcomplete(event){
             .attr('width',dataTemp[0].faceRectangle.width)
             .attr('height',dataTemp[0].faceRectangle.height)
 
+        document.getElementById('result-wrapper').classList.remove('hidden');
+
+        setTimeout(()=>{
+            config.state += 1;
+            updateState()
+        }, 60000)
+
     }
 }
 
@@ -339,48 +349,159 @@ btnCancel.addEventListener('click', () => {
 window.addEventListener('keypress', (event) => {
     const keyName = event.key;
     if (keyName == 'n') {
-        btnNext.click();
+        if(!config.blocked){
+            if(config.activeButton == 0){
+                config.state += 1;
+                updateState()
+            }else{
+                config.state = 0;
+                updateState()
+            }
+        }
+    }else if (keyName == 'l') {
+        if(config.maxButtons>1){
+            config.activeButton = 1
+            updateButton()
+        }
+    }else if (keyName == 'r') {
+        config.activeButton = 0
+        updateButton()
     }
+
+    console.log(keyName, config.activeButton)
 })
 
 
 btnNext.addEventListener('click', () => {
-    document.querySelector('#cancel').classList.remove('hidden');
-    // if (config.state == 4) {
-    //     window.location.reload(true);
-    // }
     config.state += 1;
-    if (config.state == 1) {
-        btnNext.innerHTML = 'Zustimmen';  
-        document.getElementById('frame-wrapper').classList.add('hidden');
-    } else if (config.state == 2) { 
-        video.classList.remove('hidden');
-        btnNext.innerHTML = 'Fotografieren';  
-        btnCancel.innerHTML = 'Abbrechen';
-        document.getElementById('frame-wrapper').classList.remove('hidden');
-    } else if (config.state == 3) {
-        var ajax = new XMLHttpRequest();
-        ajax.open("GET", "http://localhost:5971/command/blinkOn/1");
-        ajax.send();
-        setTimer();
-        btnNext.innerHTML = 'Weiter';  
-        document.getElementById('analysis').style.opacity = 0;
-        document.querySelector('.countdown-wrapper').classList.remove('hidden');
-        document.getElementById('frame-wrapper').classList.add('hidden');
-    } else if (config.state == 4) {
-        // createGlitch();
-        togglePrintOverlay();
-        clearAnalysis();
-        document.querySelector('.countdown-wrapper').classList.add('hidden');
-        document.getElementById('frame-wrapper').classList.add('hidden');
-        document.querySelector('.canvas-wrapper').classList.add('hidden');
-        video.classList.add('hidden');
-        btnCancel.innerHTML = 'Neu starten';
-        document.querySelector('#next').classList.add('hidden');
-        valueHair = 0;
-        valueEmotion = 0;
+    updateState()
+})
+
+function updateButton(){
+    if(config.activeButton==1){
+        btnNext.classList.remove('btn-next')
+        btnNext.classList.remove('boxShadow')
+        btnNext.classList.add('btn-cancel')
+        btnCancel.classList.add('btn-next')
+        btnCancel.classList.add('boxShadow')
+        btnCancel.classList.remove('btn-cancel')
+        btnCancel.focus()
+    }else{
+        btnCancel.classList.remove('btn-next')
+        btnCancel.classList.remove('boxShadow')
+        btnCancel.classList.add('btn-cancel')
+        btnNext.classList.add('btn-next')
+        btnNext.classList.add('boxShadow')
+        btnNext.classList.remove('btn-cancel')
+        btnNext.focus()
     }
-    
+}
+
+function updateState(){
+
+    config.activeButton = 0
+    updateButton()
+
+    switch(config.state){
+        case 0:
+
+            btnNext.innerHTML = 'Starten';  
+            btnNext.classList.remove('hidden')
+
+            btnCancel.classList.add('hidden')
+
+            document.getElementById('frame-wrapper').classList.add('hidden');
+            document.getElementById('result-wrapper').classList.add('hidden');
+            document.querySelector('.countdown-wrapper').classList.add('hidden');
+            document.querySelector('.canvas-wrapper').classList.add('hidden');
+            document.getElementById('analysis').style.opacity = 0;
+
+            video.classList.add('hidden');
+
+        break;
+        case 1:
+
+            config.maxButtons = 2
+
+            btnNext.innerHTML = 'Zustimmen';
+            btnNext.classList.remove('hidden')
+
+            btnCancel.innerHTML = 'Neu starten';
+            btnCancel.classList.remove('hidden')
+
+            document.getElementById('frame-wrapper').classList.add('hidden');
+            document.getElementById('result-wrapper').classList.add('hidden');
+            document.querySelector('.countdown-wrapper').classList.add('hidden');
+            document.querySelector('.canvas-wrapper').classList.add('hidden');
+            document.getElementById('analysis').style.opacity = 0;
+
+            video.classList.add('hidden');
+
+        break;
+        case 2:
+            config.maxButtons = 1
+
+            btnNext.innerHTML = 'Countdown starten';
+            btnNext.classList.remove('hidden')
+
+            btnCancel.classList.add('hidden')           
+
+            document.getElementById('result-wrapper').classList.add('hidden');
+            document.querySelector('.countdown-wrapper').classList.add('hidden');
+            document.querySelector('.canvas-wrapper').classList.add('hidden');
+            document.getElementById('analysis').style.opacity = 0;
+
+            video.classList.remove('hidden');
+            document.getElementById('frame-wrapper').classList.remove('hidden');
+
+        break;
+        case 3:
+
+            config.blocked = true
+
+            config.maxButtons = 1
+
+            btnNext.classList.add('hidden')
+            btnCancel.classList.add('hidden')   
+
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "http://localhost:5971/command/blinkOn/1");
+            ajax.send();
+
+            setTimer();
+            document.getElementById('frame-wrapper').classList.add('hidden');
+            document.getElementById('result-wrapper').classList.add('hidden');
+            document.querySelector('.countdown-wrapper').classList.remove('hidden');
+            document.querySelector('.canvas-wrapper').classList.add('hidden');
+            document.getElementById('analysis').style.opacity = 0;
+
+            video.classList.remove('hidden');
+        break;
+        case 4:
+            console.log('4')
+            // createGlitch();
+            togglePrintOverlay();
+            clearAnalysis();
+
+            document.querySelector('.countdown-wrapper').classList.add('hidden');
+            document.getElementById('frame-wrapper').classList.add('hidden');
+            document.querySelector('.canvas-wrapper').classList.add('hidden');
+            document.getElementById('result-wrapper').classList.add('hidden');
+            document.getElementById('analysis').style.opacity = 0;
+            video.classList.add('hidden');
+            
+            valueHair = 0;
+            valueEmotion = 0;
+
+            setTimeout(()=>{
+                config.blocked = false
+
+                btnNext.innerHTML = 'Neu starten';
+                btnNext.classList.remove('hidden')
+            }, 60000)
+        break;
+    }
+
     for (let stateIndex = 0; stateIndex < 5; stateIndex++) {
         
         if (config.state == stateIndex) {
@@ -397,7 +518,7 @@ btnNext.addEventListener('click', () => {
             }
         }
     }
-})
+}
 
 window.addEventListener('click', () => {
     console.log('click');
@@ -412,3 +533,5 @@ blockDate.innerHTML = getDate();
 
 streamCamera();
 getDate();
+updateState();
+updateButton()
