@@ -423,6 +423,18 @@ function updateButton(){
     }
 }
 
+var resetCounter = 0;
+setInterval(()=>{
+    resetCounter++
+    if(resetCounter >= 150){
+        resetCounter = 0;
+        if(config.state != 0){
+            config.state = 0;
+            updateState();
+        }
+    }
+},1000)
+
 function updateState(){
 
     config.activeButton = 0
@@ -430,6 +442,9 @@ function updateState(){
 
     switch(config.state){
         case 0:
+
+            config.blocked = false;
+            resetCounter = 0;
 
             btnNext.innerHTML = 'Starten';  
             btnNext.classList.remove('hidden')
@@ -452,6 +467,8 @@ function updateState(){
         case 1:
 
             config.maxButtons = 2
+            config.blocked = false;
+            resetCounter = 0;
 
             btnNext.innerHTML = 'Zustimmen';
             btnNext.classList.remove('hidden')
@@ -474,6 +491,8 @@ function updateState(){
         break;
         case 2:
             config.maxButtons = 1
+            config.blocked = false;
+            resetCounter = 0;
 
             btnNext.innerHTML = 'Countdown starten';
             btnNext.classList.remove('hidden')
@@ -498,6 +517,7 @@ function updateState(){
             config.blocked = true
 
             config.maxButtons = 1
+            resetCounter = 0;
 
             btnNext.classList.add('hidden')
             btnCancel.classList.add('hidden')   
@@ -539,6 +559,7 @@ function updateState(){
 
             valueHair = 0;
             valueEmotion = 0;
+            resetCounter = 0;
 
             setTimeout(()=>{
                 config.blocked = false
