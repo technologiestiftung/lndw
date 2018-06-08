@@ -503,10 +503,12 @@ function updateState(){
             setTimer();
         break;
         case 4:
-            console.log('4')
+            console.log('4');
             // createGlitch();
             togglePrintOverlay();
             clearAnalysis();
+
+            pickRandomCard();
 
             document.getElementById('wrapper-error').classList.add('hidden');
             document.querySelector('.countdown-wrapper').classList.add('hidden');
@@ -545,6 +547,19 @@ function updateState(){
         }
     }
 }
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+function pickRandomCard() {
+    let randomInt = getRandomInt(7);
+    let url = `./assets/postcards/0${randomInt}.png`;
+    let img = document.querySelector('#postcard');
+    img.src = url;
+}
+
+
 
 window.addEventListener('click', () => {
     console.log('click');
