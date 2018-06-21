@@ -49,6 +49,9 @@ void loop() {
       Serial.println(command);
       Serial.println(textstr);
 
+      //!!!! Here the commands are being executed
+      //The variable command holds the command send by the user
+      //The variable textstr holds an additional variable send by the user
       
       if(command == "blinkOn"){
         blinking = true; blink_state = true;

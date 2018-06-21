@@ -3,6 +3,8 @@ var vidHeight = 550;
 var title, info, prompt, video, container, devices, id, config, canvas, context;
 var blockDate, btnNext, countdown = 4, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
 
+var drinkId = 1;
+
 config = {
     blocked:false,
     state: 0,
@@ -169,18 +171,19 @@ function uploadcomplete(event){
         let hair = document.querySelector('#p-hair');
         let fhair = document.querySelector('#p-fhair')
         let smile = document.querySelector('#p-smile')
-        
+
         gender.innerHTML = (response.gender == 'male') ? 'männlich': 'weiblich';
         age.innerHTML = response.age + ' Jahre';
 
-        
-        var emotionString = ''
+        var emotionString = '', is_neutral = false, is_happy = false
         for (var property in response.emotion) {
             if (response.emotion.hasOwnProperty(property)) {
 
                 let valueTempEmotion = response.emotion[property];
                 let stringTempEmotion = property;
                 if(parseFloat(valueTempEmotion) > 0){
+                    if(stringTempEmotion == 'happiness'){ is_happy = true; }
+                    if(stringTempEmotion == 'neutral'){ is_neutral = true; }
                     if(emotionString != '')emotionString += '<br />'
                     if(!(stringTempEmotion in emotions)){
                         emotionString += stringTempEmotion
@@ -193,6 +196,25 @@ function uploadcomplete(event){
                 // }
 
             }
+        }
+
+        var quersumme_elements = (response.age+'').split(''),
+            quersumme_alter = 0
+
+        quersumme_elements.forEach(q=>{quersumme_elements+=q;})
+        //max is 18???probably more 16
+        if(quersumme_alter>16)quersumme_alter=16
+
+        //should be between 1 and 6
+        if(is_happy){
+            //1-3
+            drinkId = Math.round(1 + quersumme_alter/16*2)
+        }else if(is_neutral){
+            //4-5
+            drinkId = Math.round(4 + quersumme_alter/16)
+        }else{
+            //5-6
+            drinkId = Math.round(5 + quersumme_alter/16)
         }
 
         //emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
@@ -549,6 +571,12 @@ function updateState(){
         break;
         case 4:
             console.log('4');
+
+            //@FABIAN this needs to done on demand instead of automatically
+            var ajax = new XMLHttpRequest();
+            ajax.open("GET", "http://localhost:5971/drinkCommand/pour/"+drinkId);
+            ajax.send();
+
             togglePrintOverlay();
             clearAnalysis();
 

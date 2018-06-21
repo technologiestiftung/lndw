@@ -1,19 +1,25 @@
 const SerialPort = require("serialport")
 
-const megaID = '55736303739351D012A1'
+const 	megaID = '55736303739351D012A1',
+		drinkID = '' //@BEN place the drinkBot's serial number here, the command line serial scanner also returns the serial number
 
 let arduinos = {
-	  mega:null, 
-	  other:null
-	}, 
+		drinkDuino:null
+		mega:null, 
+		other:null
+	},
+	drinkPort = null,
 	port = null,
-	message = ''
+	message = '',
+	drinkMessage = ''
 
 SerialPort.list().then(list=>{
 	list.forEach(l=>{
 		if(('manufacturer' in l) && l.manufacturer != undefined && l.manufacturer.indexOf('Arduino')>-1){
 		  if(('serialNumber' in l)&&(megaID == l.serialNumber)){
 		    arduinos.mega = l
+		  }else if(('serialNumber' in l)&&(drinkID == l.serialNumber)){
+		    arduinos.drinkDuino = l
 		  }else{
 		    arduinos.other = l
 		  }
@@ -39,6 +45,29 @@ SerialPort.list().then(list=>{
 		})
 
 		port.on('open', function(){
+		  console.log('Serial Port Opend')
+		})
+	}
+
+	if(arduinos.drinkDuino != null){
+
+	  	drinkPort = new SerialPort(arduinos.drinkDuino.comName, {
+		   baudRate: 9600
+		})
+
+		drinkPort.on('error', function(err) {
+		  console.log('Error: ', err.message)
+		})
+
+		drinkPort.on('data', function(data){
+		  drinkMessage += data.toString('utf8')
+		  if(drinkMessage.indexOf('\n')>=0){
+		    console.log('MSG:', drinkMessage)
+		    drinkMessage = ''
+		  }
+		})
+
+		drinkPort.on('open', function(){
 		  console.log('Serial Port Opend')
 		})
 	}
@@ -116,6 +145,21 @@ app.get("/command/:cmd/:data", (req, res)=>{
 	res.status(200).json({msg:'Command send.'})
 })
 
+app.get("/drinkCommand/:cmd/:data", (req, res)=>{
+
+	if(arduinos.drinkDuino != null){
+	    drinkPort.write('$')
+	    drinkPort.write(req.params.cmd)
+	    drinkPort.write('$')
+	    drinkPort.write(req.params.data)
+	    drinkPort.write('\n')
+		res.status(200).json({msg:'Command send.'})
+	}else{
+		res.status(200).json({msg:'No DrinkBot connected.'})
+	}
+
+})
+
 app.post("/analyse", (req, res)=>{
 	res.header("Access-Control-Allow-Origin", "*")
 	let form = new formidable.IncomingForm()
@@ -190,7 +234,7 @@ function msProcess (filename, req, res){
 				let buf = img.crop(json_result[0].faceRectangle.left-img_border, json_result[0].faceRectangle.top-img_border, json_result[0].faceRectangle.width+2*img_border, json_result[0].faceRectangle.height+2*img_border)
 					.scaleToFit(384,500)
 					.dither565()
-					.brightness(0.25)
+					.brightness(0.20)
 					.dither565()
 					.greyscale()
 					.dither565()
