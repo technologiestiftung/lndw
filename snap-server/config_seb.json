@@ -1,0 +1,12 @@
+{
+	"azure":{
+		"name":"TSB-LNDW",
+		"key1":"7311df589277498e997b66b1ea99a879",
+		"key2":"56cdfa3bd7384da58fbed371b9332648",
+		"region":"westeurope"
+	},
+	"arduino":{
+		"appPath":"/Applications/Arduino.app/Contents/MacOS",
+		"sketchPath":"/Users/sebastianmeier/Sites/TSB/lndw-2018/snap-server/arduino/src/sketch/"
+	}
+}

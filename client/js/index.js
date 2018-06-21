@@ -7,7 +7,7 @@ var drinkId = 1;
 
 config = {
     blocked:false,
-    state: 0,
+    state: 5,
     activeButton:0,
     maxButtons:1
 };
@@ -72,7 +72,7 @@ function streamCamera() {
         // console.log(devices);
         var camera = devices.filter(device => device.kind == "videoinput");
         camera.forEach(device => {
-            if(device.deviceId == "c57886efe5999c5b2bee5c251718807e5d912fd84b91ba53afef097418dd4603") { id = device.deviceId;};
+            if(device.deviceId == "06a4fe2e071b0476dd62de20caaf08942af328f29bf09bb691525883205ed8c7") { id = device.deviceId;};
         })
         var constraints = { deviceId: { exact: id } };
         return navigator.mediaDevices.getUserMedia({ video: constraints });
@@ -404,12 +404,12 @@ window.addEventListener('keypress', (event) => {
                 updateState()
             }
         }
-    }else if (keyName == 'l') {
+    }else if (keyName == 'd') {
         if(config.maxButtons>1){
             config.activeButton = 1
             updateButton()
         }
-    }else if (keyName == 'r') {
+    }else if (keyName == 'a') {
         if(config.maxButtons>1){
             config.activeButton = 0
             updateButton()
@@ -569,18 +569,14 @@ function updateState(){
 
             setTimer();
         break;
+        // Shot Roboter
         case 4:
             console.log('4');
 
-            //@FABIAN this needs to done on demand instead of automatically
-            var ajax = new XMLHttpRequest();
-            ajax.open("GET", "http://localhost:5971/drinkCommand/pour/"+drinkId);
-            ajax.send();
+            config.maxButtons = 2
 
             togglePrintOverlay();
             clearAnalysis();
-
-            pickRandomCard();
 
             document.getElementById('wrapper-error').classList.add('hidden');
             document.querySelector('.overlay').classList.remove('scanning');
@@ -590,6 +586,8 @@ function updateState(){
             document.querySelector('.canvas-wrapper').classList.add('hidden');
             document.getElementById('result-wrapper').classList.add('hidden');
             document.getElementById('analysis').style.opacity = 0;
+            btnNext.classList.add('hidden');
+            btnCancel.classList.add('hidden');
             video.classList.add('hidden');
 
             valueHair = 0;
@@ -600,18 +598,32 @@ function updateState(){
                 config.blocked = false
                 config.activeButton = 1
 
-                btnNext.innerHTML = 'Neu starten';
-                btnNext.classList.remove('hidden')
+                btnNext.classList.remove('hidden');
+                btnCancel.classList.remove('hidden');
+                btnNext.innerHTML = 'Sehr gerne';
+                btnCancel.innerHTML = 'Nein, danke';
                 btnNext.focus();
-            }, 30000)
+            }, 5000) // change timer later, because printer takes more time to process image
         break;
+
+        case 5:
+            console.log('5');
+            //@FABIAN this needs to done on demand instead of automatically
+            var ajax = new XMLHttpRequest();
+            config.maxButtons = 1
+
+            ajax.open("GET", "http://localhost:5971/drinkCommand/pour/"+drinkId);
+            ajax.send();
+
+            btnCancel.classList.add('hidden');
+            btnNext.innerHTML = 'Neu starten';
     }
 
-    for (let stateIndex = 0; stateIndex < 5; stateIndex++) {
+    for (let stateIndex = 0; stateIndex < 6; stateIndex++) {
         
         if (config.state == stateIndex) {
 
-            for (let index = 0; index < 5; index++) {
+            for (let index = 0; index < 6; index++) {
                 const id = '#state-0' + index;
                 
                 if (index == config.state) {

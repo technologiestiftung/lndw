@@ -4,7 +4,7 @@ const 	megaID = '55736303739351D012A1',
 		drinkID = '' //@BEN place the drinkBot's serial number here, the command line serial scanner also returns the serial number
 
 let arduinos = {
-		drinkDuino:null
+		drinkDuino:null,
 		mega:null, 
 		other:null
 	},
