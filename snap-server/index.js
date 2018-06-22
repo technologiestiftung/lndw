@@ -1,7 +1,7 @@
 const SerialPort = require("serialport")
 
 const 	megaID = '55736303739351D012A1',
-		drinkID = '' //@BEN place the drinkBot's serial number here, the command line serial scanner also returns the serial number
+		drinkID = '7573530303235140A241' //@BEN place the drinkBot's serial number here, the command line serial scanner also returns the serial number
 
 let arduinos = {
 		drinkDuino:null,
@@ -15,6 +15,7 @@ let arduinos = {
 
 SerialPort.list().then(list=>{
 	list.forEach(l=>{
+		console.log(l);
 		if(('manufacturer' in l) && l.manufacturer != undefined && l.manufacturer.indexOf('Arduino')>-1){
 		  if(('serialNumber' in l)&&(megaID == l.serialNumber)){
 		    arduinos.mega = l
@@ -136,6 +137,7 @@ app.get("/data", (req, res)=>{
 
 app.get("/command/:cmd/:data", (req, res)=>{
 
+
     port.write('$')
     port.write(req.params.cmd)
     port.write('$')
@@ -147,12 +149,13 @@ app.get("/command/:cmd/:data", (req, res)=>{
 
 app.get("/drinkCommand/:cmd/:data", (req, res)=>{
 
+	console.log(req, res);
+
 	if(arduinos.drinkDuino != null){
-	    drinkPort.write('$')
-	    drinkPort.write(req.params.cmd)
-	    drinkPort.write('$')
+	    // drinkPort.write('$')
+	    // drinkPort.write(req.params.cmd)
 	    drinkPort.write(req.params.data)
-	    drinkPort.write('\n')
+	    // drinkPort.write('\n')
 		res.status(200).json({msg:'Command send.'})
 	}else{
 		res.status(200).json({msg:'No DrinkBot connected.'})

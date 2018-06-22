@@ -3,11 +3,11 @@ var vidHeight = 550;
 var title, info, prompt, video, container, devices, id, config, canvas, context;
 var blockDate, btnNext, countdown = 4, valueEmotion = 0, emotionString = '', stringHair = '', valueHair = 0;
 
-var drinkId = 1;
+var drinkId = 0;
 
 config = {
     blocked:false,
-    state: 5,
+    state: 0,
     activeButton:0,
     maxButtons:1
 };
@@ -72,7 +72,7 @@ function streamCamera() {
         // console.log(devices);
         var camera = devices.filter(device => device.kind == "videoinput");
         camera.forEach(device => {
-            if(device.deviceId == "06a4fe2e071b0476dd62de20caaf08942af328f29bf09bb691525883205ed8c7") { id = device.deviceId;};
+            if(device.deviceId == "fff8b829a090c35123f23ab7ccfa5e2724c51a813d347b1e079c50e9611b52f4") { id = device.deviceId;};
         })
         var constraints = { deviceId: { exact: id } };
         return navigator.mediaDevices.getUserMedia({ video: constraints });
@@ -198,24 +198,24 @@ function uploadcomplete(event){
             }
         }
 
-        var quersumme_elements = (response.age+'').split(''),
-            quersumme_alter = 0
+        // var quersumme_elements = (response.age+'').split(''),
+        //     quersumme_alter = 0
 
-        quersumme_elements.forEach(q=>{quersumme_elements+=q;})
-        //max is 18???probably more 16
-        if(quersumme_alter>16)quersumme_alter=16
+        // quersumme_elements.forEach(q=>{quersumme_elements+=q;})
+        // //max is 18???probably more 16
+        // if(quersumme_alter>16)quersumme_alter=16
 
-        //should be between 1 and 6
-        if(is_happy){
-            //1-3
-            drinkId = Math.round(1 + quersumme_alter/16*2)
-        }else if(is_neutral){
-            //4-5
-            drinkId = Math.round(4 + quersumme_alter/16)
-        }else{
-            //5-6
-            drinkId = Math.round(5 + quersumme_alter/16)
-        }
+        // //should be between 1 and 6
+        // if(is_happy){
+        //     //1-3
+        //     drinkId = Math.round(1 + quersumme_alter/16*2)
+        // }else if(is_neutral){
+        //     //4-5
+        //     drinkId = Math.round(4 + quersumme_alter/16)
+        // }else{
+        //     //5-6
+        //     drinkId = Math.round(5 + quersumme_alter/16)
+        // }
 
         //emotion.innerHTML = emotionString + ' (' + valueEmotion + ')';
         emotion.innerHTML = emotionString;
@@ -459,6 +459,8 @@ setInterval(()=>{
 
 function updateState(){
 
+    console.log(`currentState: ${config.state}`);
+
     config.activeButton = 0
     updateButton()
 
@@ -526,6 +528,8 @@ function updateState(){
             config.activeButton = 0;
             btnNext.focus();
 
+            drinkId = getRandomInt(5);
+
             btnCancel.classList.add('hidden')           
 
            //document.querySelector('.overlay.scanning').classList.add('hidden');
@@ -576,6 +580,7 @@ function updateState(){
             config.maxButtons = 2
 
             togglePrintOverlay();
+            pickRandomCard();
             clearAnalysis();
 
             document.getElementById('wrapper-error').classList.add('hidden');
@@ -590,6 +595,8 @@ function updateState(){
             btnCancel.classList.add('hidden');
             video.classList.add('hidden');
 
+            drinkId = getRandomInt(5);
+
             valueHair = 0;
             valueEmotion = 0;
             resetCounter = 0;
@@ -599,31 +606,28 @@ function updateState(){
                 config.activeButton = 1
 
                 btnNext.classList.remove('hidden');
-                btnCancel.classList.remove('hidden');
-                btnNext.innerHTML = 'Sehr gerne';
-                btnCancel.innerHTML = 'Nein, danke';
+                btnNext.innerHTML = 'Neu starten';
+                // btnCancel.innerHTML = 'Nein, danke';
                 btnNext.focus();
-            }, 5000) // change timer later, because printer takes more time to process image
+            }, 500) // change timer later, because printer takes more time to process image
+
+
+            setTimeout(()=> {
+                console.log(drinkId);
+                var ajax = new XMLHttpRequest();
+                ajax.open("GET", "http://localhost:5971/drinkCommand/p/"+drinkId);
+                ajax.send();
+            },200);
+
         break;
 
-        case 5:
-            console.log('5');
-            //@FABIAN this needs to done on demand instead of automatically
-            var ajax = new XMLHttpRequest();
-            config.maxButtons = 1
-
-            ajax.open("GET", "http://localhost:5971/drinkCommand/pour/"+drinkId);
-            ajax.send();
-
-            btnCancel.classList.add('hidden');
-            btnNext.innerHTML = 'Neu starten';
     }
 
-    for (let stateIndex = 0; stateIndex < 6; stateIndex++) {
+    for (let stateIndex = 0; stateIndex < 5; stateIndex++) {
         
         if (config.state == stateIndex) {
 
-            for (let index = 0; index < 6; index++) {
+            for (let index = 0; index < 5; index++) {
                 const id = '#state-0' + index;
                 
                 if (index == config.state) {
