@@ -1,5 +1,6 @@
 node_modules
 config.json
+config_seb.json
 .DS_Store
 /client/node_modules
 /client/.DS_STORE
