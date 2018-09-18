@@ -2,7 +2,7 @@ const http = require('http')
 const fs = require('fs')
 const port = 3000
 
-const requestHandler = (request, repsonse) => {
+const requestHandler = (request, response) => {
 	if(request.url.indexOf('images')>=0){
 		response.end(fs.readFileSync('.' + request.url))
 	}else if(request.url.indexOf('uploads')>=0){
