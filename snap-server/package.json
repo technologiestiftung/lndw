@@ -20,6 +20,8 @@
     "moment": "^2.22.1",
     "ms-rest-azure": "^2.5.5",
     "node-webcam": "^0.4.3",
-    "serialport": "^6.2.0"
+    "serialport": "^6.2.0",
+    "system": "^2.0.1",
+    "webpage": "^0.3.0"
   }
 }
