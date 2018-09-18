@@ -145,6 +145,8 @@ function msProcess (filename, req, res){
 
 					let template = fs.readFileSync(__dirname + '/html/template.html', 'utf8')
 
+					template = template.replace('{{PHOTOID}}', filename)
+
 					let gender_translate = {"male":"maennlich", "female":"weiblich"}
 					template = template.replace('{{GENDER}}', gender_translate[json_result[0].faceAttributes.gender])
 
