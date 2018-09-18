@@ -4,7 +4,7 @@ const port = 3000
 
 const requestHandler = (request, response) => {
 	if(request.url.indexOf('images')>=0){
-		response.end(fs.readFileSync('.' + request.url))
+		response.end(fs.readFileSync('./html/' + request.url))
 	}else if(request.url.indexOf('uploads')>=0){
 		response.end(fs.readFileSync('.' + request.url))
 	}else{

@@ -68,15 +68,24 @@ function streamCamera() {
 
     navigator.mediaDevices.enumerateDevices().then(devices => {
         // console.log(devices);
+        let firstID = false;let id = false;
         var camera = devices.filter(device => device.kind == "videoinput");
         camera.forEach(device => {
-            if(device.deviceId == "c57886efe5999c5b2bee5c251718807e5d912fd84b91ba53afef097418dd4603") { id = device.deviceId;};
+        	firstID = device.deviceId
+            if(device.deviceId == "64bea09be349074affdf2be59c1bbe4d8675b15c27c3e704124f5b059805f0b2") { id = device.deviceId;};
         })
-        var constraints = { deviceId: { exact: id } };
+        if(id){
+        	var constraints = { deviceId: { exact: id } };
+        }
+        var constraints = { deviceId: { exact: firstID } };
+
+        console.log(constraints)
         return navigator.mediaDevices.getUserMedia({ video: constraints });
     })
     .then(stream => {
         video.srcObject = stream
+    }).catch(e=>{
+    	console.log(e)
     });
 }
 

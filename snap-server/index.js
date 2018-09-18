@@ -12,9 +12,6 @@ const	sqlite = require('better-sqlite3'),
 		Jimp = require("jimp"),
 		getPixels = require("get-pixels")
 
-let stdout = execSync(`export PATH=$PATH:${config.arduino.appPath}`);
-console.log(config.arduino.appPath)
- 
 let credentials = new CognitiveServicesCredentials(config.azure.key1),
 	client = new FaceAPIClient(credentials, config.azure.region);
 
@@ -136,7 +133,7 @@ function msProcess (filename, req, res){
 				let buf = img.crop(json_result[0].faceRectangle.left-img_border, json_result[0].faceRectangle.top-img_border, json_result[0].faceRectangle.width+2*img_border, json_result[0].faceRectangle.height+2*img_border)
 				.scaleToFit(384,500)
 				.dither565()
-				.brightness(0)
+				.brightness(0) //BRIGHTNESS
 				.dither565()
 				.greyscale()
 				.dither565()
@@ -183,8 +180,7 @@ function msProcess (filename, req, res){
 			        	template = template.replace('{{HAIR}}', stringHair + ' (' + valueHair + ')')
 			        }
 
-			        template = template.replace('{{GLASSES}}', stringHair + ' (' + valueHair + ')')
-			        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
+			        template = template.replace('{{GLASSES}}', ((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja'))
 
 			        var makeupStr = ''
 			        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'
@@ -192,6 +188,8 @@ function msProcess (filename, req, res){
 			        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'L1ppen'
 			        if(makeupStr != ''){
 			        	template = template.replace('{{MAKEUP}}', '<tr><td colspan="2"><strong>Mak3up:</strong><br />'+makeupStr+'</td></tr>')
+			        }else{
+			        	template = template.replace('{{MAKEUP}}', '')
 			        }
 
 			        var fhairStr = ''
@@ -200,6 +198,8 @@ function msProcess (filename, req, res){
 			        if(json_result[0].faceAttributes.facialHair.sideburns > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5 || json_result[0].faceAttributes.facialHair.beard)?', ':'')+'Koteletten'
 			        if(fhairStr != ''){
 			        	template = template.replace('{{FACEHAIR}}', '<tr><td colspan="2"><strong>Ges1chtsbehaarung:</strong><br />'+fhairStr+'</td></tr>')
+			        }else{
+			        	template = template.replace('{{FACEHAIR}}', '')
 			        }
 
 			        var smileStr = 'Nein'
@@ -219,7 +219,7 @@ function msProcess (filename, req, res){
 			            'sadness': 'traurig'
 			        }
 			        
-			        let emotion_str = '', emotion_str_a = [], emotion_str_ai = 0
+			        let emotion_str = '', emotion_str_a = [[]], emotion_str_ai = 0
 
 					for(let property in json_result[0].faceAttributes.emotion){
 						let val = parseFloat(json_result[0].faceAttributes.emotion[property])
@@ -246,9 +246,11 @@ function msProcess (filename, req, res){
 					fs.writeFileSync(__dirname + '/html/generated.html', template, 'utf8')
 
 					//Windows Only
-					let stdout = execSync('phantomjs rasterize.js http://localhost:3000/ snap.pdf 62mm*250mm');
-					let stdout = execSync('PDFtoPrinter.exe snap.pdf "Brother QL-800"');
-					let stdout1 = execSync('nircmd win activate title "LNDW - Google Chrome"');
+					let stdout = execSync('phantomjs rasterize.js http://localhost:3000/ snap.pdf 62mm*200mm');
+					console.log('rasterize')
+					let stdout1 = execSync('PDFtoPrinter.exe snap.pdf "Brother QL-800"');
+					console.log('print')
+					let stdout2 = execSync('nircmd win activate title "LNDW - Google Chrome"');
 
 				});
 			})
