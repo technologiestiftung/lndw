@@ -43,3 +43,11 @@ export PATH=$PATH:/Applications/Arduino.app/Contents/MacOS
 The code for the shader is written by [Adam Ferris](adamferris.com). All rights belong to the creator.
 
 C:\Users\LangeNacht\Downloads\Apache24\bin>httpd.exe
+
+## shader 
+
+- restart browser
+- update camera ID client/js/index.js
+- printer reset
+- print some dummies
+

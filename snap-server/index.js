@@ -190,7 +190,7 @@ function msProcess (filename, req, res){
 				let buf = img.crop(json_result[0].faceRectangle.left-img_border, json_result[0].faceRectangle.top-img_border, json_result[0].faceRectangle.width+2*img_border, json_result[0].faceRectangle.height+2*img_border)
 					.scaleToFit(384,500)
 					.dither565()
-					.brightness(0.25)
+					.brightness(0)
 					.dither565()
 					.greyscale()
 					.dither565()
@@ -262,7 +262,7 @@ function msProcess (filename, req, res){
 						            'happiness': 'gluecklich',
 						            'surprise': 'ueberrascht',
 						            'anger': 'wuetend',
-						            'contempt': 'missachtend',
+						            'contempt': 'kritisch',
 						            'disguist': 'ekelnd',
 						            'disgust': 'ekelnd',
 						            'fear': 'aengstlich',

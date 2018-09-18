@@ -144,7 +144,7 @@ function uploadcomplete(event){
             'happiness': 'glücklich',
             'surprise': 'überrascht',
             'anger': 'wütend',
-            'contempt': 'missachtend',
+            'contempt': 'kritisch',
             'disguist': 'ekelnd',
             'disgust': 'ekelnd',
             'fear': 'ängstlich',
