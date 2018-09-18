@@ -1,52 +1,3 @@
-const SerialPort = require("serialport")
-
-const megaID = '55736303739351D012A1'
-
-let arduinos = {
-	  mega:null, 
-	  other:null
-	}, 
-	port = null,
-	message = ''
-
-SerialPort.list().then(list=>{
-	list.forEach(l=>{
-		if(('manufacturer' in l) && l.manufacturer != undefined && l.manufacturer.indexOf('Arduino')>-1){
-		  if(('serialNumber' in l)&&(megaID == l.serialNumber)){
-		    arduinos.mega = l
-		  }else{
-		    arduinos.other = l
-		  }
-		}
-	})
-
-	if(arduinos.other != null){
-
-	  	port = new SerialPort(arduinos.other.comName, {
-		   baudRate: 9600
-		})
-
-		port.on('error', function(err) {
-		  console.log('Error: ', err.message)
-		})
-
-		port.on('data', function(data){
-		  message += data.toString('utf8')
-		  if(message.indexOf('\n')>=0){
-		    console.log('MSG:', message)
-		    message = ''
-		  }
-		})
-
-		port.on('open', function(){
-		  console.log('Serial Port Opend')
-		})
-	}
-
-}).catch(err=>{
-  throw err
-})
-
 const	sqlite = require('better-sqlite3'),
       	db = new sqlite(__dirname + '/database.db'),
       	express = require('express'),
@@ -107,12 +58,7 @@ app.get("/data", (req, res)=>{
 
 app.get("/command/:cmd/:data", (req, res)=>{
 
-    port.write('$')
-    port.write(req.params.cmd)
-    port.write('$')
-    port.write(req.params.data)
-    port.write('\n')
-
+	//Legacy feature, just to keep things running
 	res.status(200).json({msg:'Command send.'})
 })
 
@@ -188,163 +134,121 @@ function msProcess (filename, req, res){
         		//TODO Dynamic brightness factor depending on black/white ratio  
 
 				let buf = img.crop(json_result[0].faceRectangle.left-img_border, json_result[0].faceRectangle.top-img_border, json_result[0].faceRectangle.width+2*img_border, json_result[0].faceRectangle.height+2*img_border)
-					.scaleToFit(384,500)
-					.dither565()
-					.brightness(0)
-					.dither565()
-					.greyscale()
-					.dither565()
-					.contrast(1)
-					.write(__dirname + '/uploads/'+filename, ()=>{
+				.scaleToFit(384,500)
+				.dither565()
+				.brightness(0)
+				.dither565()
+				.greyscale()
+				.dither565()
+				.contrast(1)
+				.write(__dirname + '/uploads/'+filename, ()=>{
 
-						let template = fs.readFileSync(__dirname + '/arduino/src/sketch/sketch-template.txt', 'utf8')
+					let template = fs.readFileSync(__dirname + '/html/template.html', 'utf8')
 
-						  getPixels(__dirname + '/uploads/'+filename, function(err, pixels) {
-    						if(err) console.log("Bad image path")
+					let gender_translate = {"male":"maennlich", "female":"weiblich"}
+					template = template.replace('{{GENDER}}', gender_translate[json_result[0].faceAttributes.gender])
 
-      						let bw_pixels = []
+					template = template.replace('{{AGE}}', json_result[0].faceAttributes.age)
 
-						    for(let i = 0; i<pixels.data.length; i+=4){
-						      if(pixels.data[i] < 50){
-						        bw_pixels.push(0)
-						      }else{
-						        bw_pixels.push(1)
-						      }
-						    }
 
-						    let img = {width:384, height:384},
-						        rowBytes = Math.round(img.width / 8),
-						        totalBytes = Math.round(rowBytes * img.height)
-						        pixelNum = 0, 
-						        byteNum = 0, 
-						        bytesOnLine = 99
+					let valueTempHair = 0, valueHair = 0, stringHair = ''
 
-						    let byteStr = ''
+					let hairColors = {
+			            'black': 'schwarz',
+			            'brown': 'braun',
+			            'blond': 'blond',
+			            'other': 'andere',
+			            'red': 'rot',
+			            'gray': 'grau'
+			        }
 
-						    for(let y=0; y<img.height; y++) {
-						      for(let x=0; x<Math.floor(rowBytes); x++) {
-						        let lastBit = (x < rowBytes - 1) ? 1 : (1 << (rowBytes * 8 - img.width))
-						        let sum = 0
+			        for (var property in json_result[0].faceAttributes.hair.hairColor) {
+			            let stringTempHair = json_result[0].faceAttributes.hair.hairColor[property].color;
+			            valueTempHair =  json_result[0].faceAttributes.hair.hairColor[property].confidence;
+			            valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
+			            if (valueHair === valueTempHair) { 
+			                for (var responseHairColor in hairColors) {
+			                    stringHair = hairColors[stringTempHair];
+			                };
+			            };
+			        }
 
-						        let before = pixelNum
+			        if(json_result[0].faceAttributes.hair.invisible == true){
+			        	template = template.replace('{{HAIR}}', 'Nicht sichtbar')
+			        }else if(json_result[0].faceAttributes.hair.bald > 0.9){
+			        	template = template.replace('{{HAIR}}', 'Glatze')
+			        }else {
+			        	template = template.replace('{{HAIR}}', stringHair + ' (' + valueHair + ')')
+			        }
 
-						        for(let b=128; b>=lastBit; b >>= 1) { // Each pixel within block...
-						          if(bw_pixels[pixelNum++] == 0) sum |= b; // If black pixel, set bit
-						        }
+			        template = template.replace('{{GLASSES}}', stringHair + ' (' + valueHair + ')')
+			        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
 
-						        //console.log(x, x*8, 380, before, pixelNum, rowBytes)
+			        var makeupStr = ''
+			        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'
+			        if(json_result[0].faceAttributes.makeup.eyeMakeup && json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += ', '
+			        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'L1ppen'
+			        if(makeupStr != ''){
+			        	template = template.replace('{{MAKEUP}}', '<tr><td colspan="2"><strong>Mak3up:</strong><br />'+makeupStr+'</td></tr>')
+			        }
 
-						        bytesOnLine++
-						        if(bytesOnLine >= 10) {
-						            //byteStr += "\n ";
-						            bytesOnLine = 0;
-						        }
+			        var fhairStr = ''
+			        if(json_result[0].faceAttributes.facialHair.moustache > 0.5) fhairStr += 'Schnurrbart'
+			        if(json_result[0].faceAttributes.facialHair.beard > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5)?', ':'')+'Bart'
+			        if(json_result[0].faceAttributes.facialHair.sideburns > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5 || json_result[0].faceAttributes.facialHair.beard)?', ':'')+'Koteletten'
+			        if(fhairStr != ''){
+			        	template = template.replace('{{FACEHAIR}}', '<tr><td colspan="2"><strong>Ges1chtsbehaarung:</strong><br />'+fhairStr+'</td></tr>')
+			        }
 
-						        let tStr = sum.toString(16).toUpperCase()
+			        var smileStr = 'Nein'
+					if(json_result[0].faceAttributes.smile > 0.5) smileStr = 'Ja'
+					template = template.replace('{{SMILE}}', smileStr)
 
-						        if(byteStr != ''){
-						        	byteStr+=','
-						        }
+			   
+			    	let emotions = {
+			            'happiness': 'gluecklich',
+			            'surprise': 'ueberrascht',
+			            'anger': 'wuetend',
+			            'contempt': 'kritisch',
+			            'disguist': 'ekelnd',
+			            'disgust': 'ekelnd',
+			            'fear': 'aengstlich',
+			            'neutral': 'neutral',
+			            'sadness': 'traurig'
+			        }
+			        
+			        let emotion_str = '', emotion_str_a = [], emotion_str_ai = 0
 
-						        byteStr += '0x'+(((tStr+'').length<2)?'0'+tStr:tStr) //
-						        //output.format(" 0x%02X", sum); // Write accumulated bits
-
-						        byteNum++
-						        //if(byteNum < totalBytes) byteStr += ',';
-						      }
-						      //process.exit()
-						    }
-
-						    template = template.replace('||PROFILE||', byteStr)
-
-						    let metadata_str = '',
-						    	emotions = {
-						            'happiness': 'gluecklich',
-						            'surprise': 'ueberrascht',
-						            'anger': 'wuetend',
-						            'contempt': 'kritisch',
-						            'disguist': 'ekelnd',
-						            'disgust': 'ekelnd',
-						            'fear': 'aengstlich',
-						            'neutral': 'neutral',
-						            'sadness': 'traurig'
-						        },
-						        hairColors = {
-						            'black': 'schwarz',
-						            'brown': 'braun',
-						            'blond': 'blond',
-						            'other': 'andere',
-						            'red': 'rot',
-						            'gray': 'grau'
-						        }
-
-						    metadata_str += 'printer.println(F("ALT3R: '+json_result[0].faceAttributes.age+' Jahre"));';
-
-						    let gender_translate = {"male":"maennlich", "female":"weiblich"}
-						    metadata_str += 'printer.println(F("Geschlecht: '+gender_translate[json_result[0].faceAttributes.gender]+'"));';
-							
-							metadata_str += 'printer.println(F("EM0T10NEN:"));';
-							
-							for(let property in json_result[0].faceAttributes.emotion){
-								let val = parseFloat(json_result[0].faceAttributes.emotion[property])
-								if(val > 0){
-									metadata_str += 'printer.println(F("'+emotions[property]+' ('+val+')"));';
-								}
+					for(let property in json_result[0].faceAttributes.emotion){
+						let val = parseFloat(json_result[0].faceAttributes.emotion[property])
+						if(val > 0){
+							if(emotion_str_a[emotion_str_ai].length == 2){
+								emotion_str_ai++; 
+								emotion_str_a.push([])
 							}
-        
-							let valueTempHair = 0, valueHair = 0, stringHair = ''
+							emotion_str_a[emotion_str_ai].push(emotions[property]+' ('+val+')')
+						}
+					}
 
-					        for (var property in json_result[0].faceAttributes.hair.hairColor) {
-					            let stringTempHair = json_result[0].faceAttributes.hair.hairColor[property].color;
-					            valueTempHair =  json_result[0].faceAttributes.hair.hairColor[property].confidence;
-					            valueHair = (valueTempHair > valueHair) ? valueTempHair : valueHair; 
-					            if (valueHair === valueTempHair) { 
-					                for (var responseHairColor in hairColors) {
-					                    stringHair = hairColors[stringTempHair];
-					                };
-					            };
-					        }
+					if(emotion_str_a[emotion_str_ai].length==1){
+						emotion_str_a[emotion_str_ai].push('')
+					}
 
-					        if(json_result[0].faceAttributes.hair.invisible == true){
-					            metadata_str += 'printer.println(F("Haare: Nicht sichtbar"));';
-					        }else if(json_result[0].faceAttributes.hair.bald > 0.9){
-					            metadata_str += 'printer.println(F("Haare: Glatze"));';
-					        }else {
-					        	metadata_str += 'printer.println(F("Haare: '+stringHair + ' (' + valueHair + ')"));';
-					        }
+					emotion_str_a.forEach(a=>{
+						emotion_str += '<tr><td>'+a.join('</td><td>')+'</td></tr>'
+						
+					})
 
-					        metadata_str += 'printer.println(F("Brille: '+((json_result[0].faceAttributes.glasses == "NoGlasses") ? 'Nein' : 'Ja')+'"));';
+					template = template.replace('{{EMOTIONS}}', emotion_str)
 
-					        var makeupStr = ''
-					        if(json_result[0].faceAttributes.makeup.eyeMakeup) makeupStr += 'Augen'
-					        if(json_result[0].faceAttributes.makeup.eyeMakeup && json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += ', '
-					        if(json_result[0].faceAttributes.makeup.lipMakeup) makeupStr += 'L1ppen'
-					        if(makeupStr != ''){
-					            metadata_str += 'printer.println(F("Makeup: '+makeupStr + '"));';
-					        }
+					fs.writeFileSync(__dirname + '/html/generated.html', template, 'utf8')
 
-					        var fhairStr = ''
-					        if(json_result[0].faceAttributes.facialHair.moustache > 0.5) fhairStr += 'Schnurrbart'
-					        if(json_result[0].faceAttributes.facialHair.beard > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5)?', ':'')+'Bart'
-					        if(json_result[0].faceAttributes.facialHair.sideburns > 0.5) fhairStr += ((json_result[0].faceAttributes.facialHair.moustache > 0.5 || json_result[0].faceAttributes.facialHair.beard)?', ':'')+'Koteletten'
-					        if(fhairStr != ''){
-					        	metadata_str += 'printer.println(F("Ges1chtsbehaarung: ' + fhairStr + '"));';
-					        }
+					//Windows Only
+					let stdout = execSync('phantomjs rasterize.js http://localhost:3000/ snap.pdf 62mm*250mm');
+					let stdout = execSync('PDFtoPrinter.exe snap.pdf "Brother QL-800"');
+					let stdout1 = execSync('nircmd win activate title "LNDW - Google Chrome"');
 
-        					var smileStr = 'Nein'
-        					if(json_result[0].faceAttributes.smile > 0.5) smileStr = 'Ja'
-        					metadata_str += 'printer.println(F("Laecheln: ' + smileStr + '"));';
-
-						    template = template.replace('||METADATA||', metadata_str)
-							
-							fs.writeFileSync(__dirname + '/arduino/src/sketch/sketch.ino', template, 'utf8')
-
-							let stdout = execSync(` arduino --upload ${config.arduino.sketchPath}sketch.ino --port ${arduinos.mega.comName} --board arduino:avr:mega`);
-							let stdout1 = execSync('open -a "Google Chrome"');
-
-						 })
-
-					});
+				});
 			})
 
 			return res.status(200).json(json_result)

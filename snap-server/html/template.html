@@ -7,34 +7,30 @@
 	<div style="width:200px; text-align: center; ">
 		<img src="./images/icon-384x152.png" style="width:75%; margin-bottom:10px;">
 		<img src="./images/header-384x184.png" style="width:100%; margin-bottom:10px;">
-		<img src="./images/seb.png" style="width:100%;">
+		<img src="./uploads/{{PHOTOID}}.png" style="width:100%;">
 		<table style="width:100%; text-align: left;">
 			<tr>
-				<td><strong>ALT3R:</strong><br />35 Jahre</td>
-				<td><strong>GESCHLECHT:</strong><br />männlich</td>
+				<td><strong>ALT3R:</strong><br />{{AGE}} Jahre</td>
+				<td><strong>GESCHLECHT:</strong><br />{{GENDER}}</td>
 			</tr>
 			<tr>
-				<td><strong>EM0TI0NEN:</strong></td>
+				<td><strong>EM0T10NEN:</strong></td>
 				<td></td>
 			</tr>
-			<tr>
+			{{EMOTIONS}}
+			<!--<tr>
 				<td>wütend<br /><i>(0.013)</i></td>
 				<td>missachtend<br /><i>(0.022)</i></td>
+			</tr>-->
+			<tr>
+				<td><strong>BRILLE:</strong><br />{{GLASSES}}</td>
+				<td><strong>LÄCHELN:</strong><br />{{SMILE}}</td>
 			</tr>
 			<tr>
-				<td>neutral<br /><i>(0.961)</i></td>
-				<td>traurig<br /><i>(0.005)</i></td>
+				<td colspan="2"><strong>HAARE:</strong><br />{{HAIR}}</td>
 			</tr>
-			<tr>
-				<td><strong>BRILLE:</strong><br />Ja</td>
-				<td><strong>LÄCHELN:</strong><br />Nein</td>
-			</tr>
-			<tr>
-				<td colspan="2"><strong>MAKEUP:</strong><br />Lippen</td>
-			</tr>
-			<tr>
-				<td colspan="2"><strong>GESICHTSBEHAARUNG:</strong><br />Schnurrbart, Bart, Koteletten</td>
-			</tr>
+			{{FACEHAIR}}
+			{{MAKEUP}}
 		</table>
 		<p>
 			Mehr erfahren unter:<br />
