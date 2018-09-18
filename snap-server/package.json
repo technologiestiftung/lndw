@@ -15,6 +15,7 @@
     "formidable": "^1.2.1",
     "fs": "0.0.1-security",
     "get-pixels": "^3.3.0",
+    "http": "0.0.0",
     "jimp": "^0.2.28",
     "moment": "^2.22.1",
     "ms-rest-azure": "^2.5.5",
