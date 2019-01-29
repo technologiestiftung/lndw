@@ -10,15 +10,15 @@
   "license": "MIT",
   "dependencies": {
     "azure-cognitiveservices-face": "^1.0.0-preview",
-    "better-sqlite3": "^4.1.0",
+    "better-sqlite3": "^5.4.0",
     "express": "^4.16.3",
     "formidable": "^1.2.1",
-    "fs": "0.0.1-security",
+    "fs": "0.0.2",
     "get-pixels": "^3.3.0",
-    "jimp": "^0.2.28",
+    "jimp": "^0.6.0",
     "moment": "^2.22.1",
     "ms-rest-azure": "^2.5.5",
     "node-webcam": "^0.4.3",
-    "serialport": "^6.2.0"
+    "serialport": "^7.1.4"
   }
 }
