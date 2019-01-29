@@ -10,8 +10,8 @@
   "description": "",
   "dependencies": {
     "browser-sync": "^2.24.4",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
     "gulp-sass": "^4.0.1",
     "gulp-uglify": "^3.0.0"
   }
