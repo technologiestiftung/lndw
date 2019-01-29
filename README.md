@@ -1,5 +1,7 @@
 ﻿# lndw
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/technologiestiftung/lndw-2018.svg)](https://greenkeeper.io/)
+
 ##  Adafruit Thermalprinter Workaround
 
 Sending bitmaps as 8bit chunks through the serial port is a mess and the memory of even an arduino mega is not enough.
